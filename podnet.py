@@ -47,14 +47,14 @@ except_ifaces = ['lo', 'docker0']
 
 def read_config_file():
     # Load Config json file
-    with open('../configs/config.json', 'r') as config_file:
+    with open('/etc/cloudcix/pod/configs/config.json', 'r') as config_file:
         config_data = json.load(config_file)
     return config_data
 
 
 def write_config_file(config_data):
     # Load Config json file
-    with open('../configs/config.json', 'w') as config_file:
+    with open('/etc/cloudcix/pod/configs/config.json', 'w') as config_file:
         json.dump(config_data, config_file, indent=4)
 
 
