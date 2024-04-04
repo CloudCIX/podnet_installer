@@ -75,8 +75,8 @@ def prepare_podnet_config(its_podnet_a):
     config_data = read_config_file()
 
     # sort ipaddresses
-    oob_ip = f'10.{config_data["pod_number"]}.0.{254 if its_podnet_a else 253}/16'
     pod_number = config_data['pod_number']
+    oob_ip = f'10.{pod_number}.0.{254 if its_podnet_a else 253}/16'
     primary_ipv4_subnet_items = config_data['primary_ipv4_subnet'].split('/')
     ipv6_subnet_items = config_data['ipv6_subnet'].split('/')
     mgmt_ipv4 = f'{next(ipaddress.IPv4Network(config_data["primary_ipv4_subnet"]).hosts())}/{primary_ipv4_subnet_items[1]}'
@@ -197,36 +197,7 @@ def choose_podnet_type():
             print("Invalid choice. Please enter '1' or '2'.")
 
 
-def display_eula():
-    """
-    Display the End User License Agreement (EULA).
-    Returns True if the user accepts, False otherwise.
-    """
-    eula_text = """
-    End User License Agreement (EULA)
-
-    Please read the following terms and conditions carefully.
-    By proceeding, you agree to abide by the terms of this EULA.
-
-    1. This software is provided as-is, without any warranty.
-    2. You may use this software for authorized purposes only.
-    3. Redistribution or modification of this software is prohibited.
-
-    Do you accept the terms of the EULA? (yes/no):
-    """
-    print(eula_text)
-    choice = input().lower()
-    return choice == 'yes'
-
-
 if __name__ == '__main__':
-    # EULA
-    if display_eula():
-        print("You accepted the EULA. Proceeding with configuration...")
-        # Call the function to choose server type and configure interfaces
-    else:
-        print("You did not accept the EULA. Exiting...")
-        exit(0)
 
     # Choose PodNet type
     podnet_type = choose_podnet_type()
@@ -271,16 +242,6 @@ if __name__ == '__main__':
         time.sleep(5)  # Scan every 5 seconds (adjust as needed)
 
     print('All interfaces are configured and updated config json.')
-
-    # Apply Firewall
-    nft_config = JINJA_ENV.get_template('templates/podnet_nftables.j2').render(**config)
-    with open('/etc/nftables.conf', 'w') as file:
-        file.write(nft_config)
-    os_cmd = 'sudo systemctl restart nftables > /dev/null 2>&1'
-    if os.system(os_cmd) != 0:
-        print('PodNet configuration failed to load.')
-        exit(0)
-    print('PodNet Nftables configuration loaded successfully.')
 
     # Setup robosoc functionality.
     # set the /etc/cloudcix/pod/robosoc.py file to executable ie to +x
