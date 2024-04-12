@@ -34,9 +34,6 @@ template_str = """
 # Create a Jinja template
 template = Template(template_str)
 
-# exception interfaces
-except_ifaces = ['lo', 'docker0']
-
 
 def read_config_file():
     # Load Config json file
@@ -76,12 +73,6 @@ def get_iface_carrier(name):
     return carrier == '1'
 
 
-def find_non_configured_ifaces(all_ifaces_config):
-    list_items = [iface for iface in all_ifaces_config if not iface['configured']]
-    list_length = len(list_items)
-    return list_items, list_length
-
-
 def render_and_apply_netplan_config(iface):
     rendered_config = template.render(iface=iface)
     print('--------------------------------------')
@@ -96,26 +87,26 @@ def render_and_apply_netplan_config(iface):
         print("Netplan configuration generated successfully.")
         subprocess.run(['sudo', 'netplan', 'apply'], check=True)
         print("Netplan configuration applied successfully.")
+        print('--------------------------------------')
+        return True
     except subprocess.CalledProcessError as e:
         print("Error generating Netplan configuration:", e)
-    print('--------------------------------------')
+        return False
 
 
-def add_new_interface(all_ifaces_config, name, ifname):
+def add_new_interface(iface):
     """
     Add a new interface to the all_ifaces list.
     """
-    for iface in all_ifaces_config:
-        if iface['name'] == name:
-            iface['ifname'] = ifname
-            # get the macaddress
-            with open(f'/sys/class/net/{ifname}/address') as file:
-                iface['mac'] = file.read()
-            print(f"New interface '{name}' with ifname '{ifname}' adding to Network...")
-            # configure the interface
-            render_and_apply_netplan_config(iface)
-            iface['configured'] = True
-            break
+    success = True
+    # get the macaddress
+    with open(f'/sys/class/net/{iface["ifname"]}/address') as file:
+        iface['mac'] = file.read()
+    print(f'New interface {iface["name"]} with ifname {iface["ifname"]} adding to Network...')
+    # configure the interface
+    if render_and_apply_netplan_config(iface):
+        success = False
+    return success
 
 
 def print_table(all_ifaces_config):
@@ -129,7 +120,7 @@ def print_table(all_ifaces_config):
     print(tabulate(table_data, headers=headers))
 
 
-def scan_for_new_iface(all_ifaces_names):
+def scan_for_new_iface(all_ifaces_names, except_ifaces):
     """
     Scan /sys/class/net/ directory for new network interface.
     Returns an new active interface name.
@@ -144,11 +135,11 @@ def scan_for_new_iface(all_ifaces_names):
     return new_active_iface
 
 
-def request_for_iface(name):
+def request_for_iface(name, all_ifaces_names, except_ifaces):
     print(f'\nPlease connect the `{name}` interface')
     while True:
         input(f'\nPress ENTER when `{name}` interface is connected...')
-        new_iface = scan_for_new_iface(all_ifaces_names)
+        new_iface = scan_for_new_iface(all_ifaces_names, except_ifaces)
         if new_iface != '':
             print(f'\n`{name}` interface detected', new_iface)
             return new_iface
@@ -235,25 +226,33 @@ if __name__ == '__main__':
     # Extract interface names from all_ifaces
     all_ifaces_names = [iface['name'] for iface in all_ifaces_config]
 
+    # exception interfaces
+    except_ifaces = ['lo', 'docker0']
+
     key = 'podnet_a_%s_ifname' if podnet_type == 'PodNet A' else 'podnet_b_%s_ifname'
 
     # Find the public0 interface's altname and update the config.json
     public_ifname = get_iface_altname('public0')
     update_config_file(key % 'public', public_ifname)
-    except_ifaces.append('public0')
-    print('\nAdded `public` ifname to config.json file')
+    except_ifaces.append(public_ifname)
+    for iface in all_ifaces_config:
+        if iface['name'] == 'public0':
+            iface['ifname'] = public_ifname
+    print('\nAdded `public0` ifname to config.json file')
 
-    #  Complete the remaining interface configuration
     for iface in all_ifaces_config:
         name = iface['name']
-        if name == 'public0':
-            iface['ifname'] = public_ifname
-        else:
-            ifname = request_for_iface(name)
-            add_new_interface(all_ifaces_config, name, ifname)
+        if name != 'public0':
+            ifname = request_for_iface(name, all_ifaces_names, except_ifaces)
+            iface['ifname'] = ifname
+            configured = add_new_interface(iface)
+            if configured:
+                print(f'Failed to configure the {name} interface, Exiting.')
+                exit(1)
             name = name[:-1] if name[-1].isdigit() else name
             update_config_file(key % str(name), ifname)
-            except_ifaces.append(name)
+            except_ifaces.append(ifname)
+
         print('\nCurrent status of the Network:')
         print_table(all_ifaces_config)
         print()
@@ -261,10 +260,11 @@ if __name__ == '__main__':
     print('All interfaces are configured and updated config json.')
 
     # Setup robosoc functionality.
-    # set the /etc/cloudcix/pod/robosoc.py file to executable ie to +x
-    os.system('sudo chmod +x /etc/cloudcix/pod/podnet_installer/robosoc.py > /dev/null 2>&1')
+    # set the /etc/cloudcix/pod/podnet_installer/robosoc.py file to executable ie to +x
+    os.system('chmod +x /etc/cloudcix/pod/podnet_installer/robosoc.py > /dev/null 2>&1')
+    # creates a cron job file for robosoc
     with open('/etc/cron.d/robosoc', 'w') as file:
-        file.write('*/15 * * * * root /etc/cloudcix/pod/podnet_installer/robosoc.py > /dev/null 2>&1 \n')
+        file.write('*/15 * * * * root /etc/cloudcix/pod/podnet_installer/robosoc.py \n')
     # for cron job file, file must be executable so set to +x
-    os.system('sudo chmod +x /etc/cron.d/robosoc > /dev/null 2>&1')
+    os.system('chmod +x /etc/cron.d/robosoc > /dev/null 2>&1')
     print('RoboSOC functionality setup successfully.')
