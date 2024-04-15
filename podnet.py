@@ -103,7 +103,7 @@ def add_new_interface(iface):
         iface['mac'] = file.read()
     print(f'New interface {iface["name"]} with ifname {iface["ifname"]} adding to Network...')
     # configure the interface
-    if render_and_apply_netplan_config(iface):
+    if render_and_apply_netplan_config(iface) is True:
         success = True
     return success
 
@@ -246,7 +246,7 @@ if __name__ == '__main__':
             ifname = request_for_iface(name, all_ifaces_names, except_ifaces)
             iface['ifname'] = ifname
             configured = add_new_interface(iface)
-            if not configured:
+            if configured is False:
                 print(f'Failed to configure the {name} interface, Exiting.')
                 exit(1)
             name = name[:-1] if name[-1].isdigit() else name
