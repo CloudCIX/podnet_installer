@@ -84,7 +84,6 @@ def render_and_apply_netplan_config(iface):
     # Run the 'sudo netplan generate' command
     try:
         subprocess.run(['sudo', 'netplan', 'generate'], check=True)
-        print("Netplan configuration generated successfully.")
         subprocess.run(['sudo', 'netplan', 'apply'], check=True)
         print("Netplan configuration applied successfully.")
         print('--------------------------------------')
@@ -98,14 +97,14 @@ def add_new_interface(iface):
     """
     Add a new interface to the all_ifaces list.
     """
-    success = True
+    success = False
     # get the macaddress
     with open(f'/sys/class/net/{iface["ifname"]}/address') as file:
         iface['mac'] = file.read()
     print(f'New interface {iface["name"]} with ifname {iface["ifname"]} adding to Network...')
     # configure the interface
     if render_and_apply_netplan_config(iface):
-        success = False
+        success = True
     return success
 
 
@@ -238,6 +237,7 @@ if __name__ == '__main__':
     for iface in all_ifaces_config:
         if iface['name'] == 'public0':
             iface['ifname'] = public_ifname
+            break
     print('\nAdded `public0` ifname to config.json file')
 
     for iface in all_ifaces_config:
@@ -246,7 +246,7 @@ if __name__ == '__main__':
             ifname = request_for_iface(name, all_ifaces_names, except_ifaces)
             iface['ifname'] = ifname
             configured = add_new_interface(iface)
-            if configured:
+            if not configured:
                 print(f'Failed to configure the {name} interface, Exiting.')
                 exit(1)
             name = name[:-1] if name[-1].isdigit() else name
