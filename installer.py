@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import curses
 import socket
 import time
