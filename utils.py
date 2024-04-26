@@ -1,28 +1,27 @@
 # stdlib
 import json
 import os.path
-
 # libs
 from jinja2 import Environment, FileSystemLoader
-# local
 
 
 __all__ = [
     'config_file_exists',
     'config_filepath',
+    'directory',
     'JINJA_ENV',
     'read_config_file',
     'update_config_file',
     'write_config_file',
 ]
 
+config_filepath = '/etc/cloudcix/pod/configs/config.json'
+directory = os.path.dirname(os.path.abspath(__file__))
 JINJA_ENV = Environment(
-    loader=FileSystemLoader('./'),
+    loader=FileSystemLoader(f'{directory}/templates'),
     trim_blocks=True,
     lstrip_blocks=True,
 )
-
-config_filepath = '/etc/cloudcix/pod/configs/config.json'
 
 
 def config_file_exists():

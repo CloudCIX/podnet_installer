@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 import curses
+import os
 import socket
 import time
 from configuration import validate_config
 from hardware import validate_hardware
 from software import validate_software
+from utils import directory
 
 
 class ScreenTooSmallError(Exception):
@@ -123,7 +125,7 @@ def setup_windows():
 def copyright(stdscr):
     banner(stdscr, True, 'header')
     win = curses.newwin(23, 84, 5, colmid - 42)
-    with open('./copyright.txt') as file:
+    with open(f'{directory}/copyright.txt') as file:
         copyright_text = file.read()
     try:
         win.addstr(1, 1, copyright_text)
