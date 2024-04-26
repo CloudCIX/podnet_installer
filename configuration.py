@@ -199,14 +199,12 @@ def validate_pod_ips(config, installer_type):
     # ceph_monitors only for an appliance that its blend includes the region flavour
     if 'appliance' in installer_type:
         ceph_monitors = config['ceph_monitors']
-        if ceph_monitors in ['', None]:
-            error_list.append('Test (1.2.18): Invalid "ceph_monitors". The "ceph_monitors" is required.')
-            result = False
-        try:
-            for ip in dns_ips.split(','):
-                ipaddress.ip_address(ip)
-        except ValueError:
-            error_list.append('Test (1.2.19): Invalid "ceph_monitors". It must have valid IP addresses.')
-            result = False
+        if ceph_monitors not in ['', None]:
+            try:
+                for ip in dns_ips.split(','):
+                    ipaddress.ip_address(ip)
+            except ValueError:
+                error_list.append('Test (1.2.18): Invalid "ceph_monitors". It must have valid IP addresses.')
+                result = False
 
     return result, error_list
