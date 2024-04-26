@@ -196,7 +196,7 @@ def validate_pod_ips(config, installer_type):
             error_list.append('Test (1.2.17): "ipv6_link_subnet" must NOT be within "ipv6_subnet".')
             result = False
 
-    # ceph_monitors only for podnet
+    # ceph_monitors only for an appliance that its blend includes the region flavour
     if 'appliance' in installer_type:
         ceph_monitors = config['ceph_monitors']
         if ceph_monitors in ['', None]:
