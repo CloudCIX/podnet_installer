@@ -12,8 +12,7 @@ def podnet_software_requirements():
 
 def appliance_software_requirements():
     return [
-        'ethtool', 'docker', 'nginx', 'apt-transport-https', 'ca-certificates', 'curl',
-        'gnupg-agent', 'apache2', 'openssl', 'certbot', 'software-properties-common', 'sshpass',
+        'ethtool', 'docker', 'curl', 'sshpass',
     ]
 
 

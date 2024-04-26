@@ -49,9 +49,9 @@ def validate_hardware(installer_type):
             size = line.split()[0]
             # Convert size to GB
             if 'G' in size:
-                storage_gb += int(size.replace('G', ''))
+                storage_gb += float(size.replace('G', ''))
             elif 'T' in size:
-                storage_gb += int(float(size.replace('T', '')) * 1024)
+                storage_gb += float(size.replace('T', '')) * 1024
 
     # Gather memory information
     meminfo_output = subprocess.run(['grep', 'MemTotal', '/proc/meminfo'], capture_output=True, text=True).stdout
