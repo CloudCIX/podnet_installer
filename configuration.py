@@ -201,7 +201,7 @@ def validate_pod_ips(config, installer_type):
         ceph_monitors = config['ceph_monitors']
         if ceph_monitors not in ['', None]:
             try:
-                for ip in dns_ips.split(','):
+                for ip in ceph_monitors.split(','):
                     ipaddress.ip_address(ip)
             except ValueError:
                 error_list.append('Test (1.2.18): Invalid "ceph_monitors". It must have valid IP addresses.')
