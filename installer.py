@@ -74,6 +74,25 @@ def copyright():
     while user_input != '\n':
         user_input = win.getkey()
 
+def summary():
+    win = curses.newwin(20, 84, 8, colmid - 42)
+    summary_header = '                                   Pod Summary                                   '
+    win.addstr(3, 1, summary_header, curses.color_pair(4))
+    win.addstr(5, 20, f'Host Status:      {host_status_text} ({host_status})')
+    verified, failed, warnings = 0, 0, 0
+    for i in test_result:
+        if 'Pass' in i:
+            verified += 1
+        elif 'Warn' in i:
+            failed += 1
+        elif 'Fail' in i:
+            warnings += 1
+    win.addstr(7, 20, 'Test Results:', curses.color_pair(5))
+    win.addstr(8, 22, f'Verified:       {verified}')
+    win.addstr(9, 22, f'Failed:         {failed}')
+    win.addstr(10, 22, f'Warning         {warnings}')
+    win.refresh()
+
 
 def edit_mode(x):
     if x:
@@ -256,6 +275,7 @@ def main(stdscr):
         banner(False, 'footer')
         main_menu(stdscr)
         stdscr.refresh()
+        summary()
         char = stdscr.getch()
 
         if char == curses.KEY_RIGHT and tab_item < len(tabs_list) - 1:
@@ -267,7 +287,12 @@ def main(stdscr):
         elif char == curses.KEY_LEFT and tab_item == 0:
             tab_item = len(tabs_list) - 1
         elif char == curses.KEY_ENTER or char == curses.KEY_DOWN or char in [10, 13]:
+            # Clear Summary Window in selected submenu Submenu
+            banner(True, 'header')
+            banner(False, 'footer')
             banner(False, 'navigate')
+            main_menu(stdscr)
+            stdscr.refresh()
             # A submenu was selected, so go process it in the edit_window
             edit_window(stdscr)
         # No submenu was selected, so go around the loop again

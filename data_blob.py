@@ -169,7 +169,7 @@ def data_blob():
             host_status_text = "appliance_a_validate"
     else:
             host_status = 0
-            host_status_text = ''
+            host_status_text = 'Unknown'
             fail_map = invert  # All ones representing all tests have failed
             update_fail_map(fail_map)
     
