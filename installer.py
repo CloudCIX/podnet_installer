@@ -79,18 +79,23 @@ def summary():
     summary_header = '                                   Pod Summary                                   '
     win.addstr(3, 1, summary_header, curses.color_pair(4))
     win.addstr(5, 20, f'Host Status:      {host_status_text} ({host_status})')
-    verified, failed, warnings = 0, 0, 0
+    verified, failed, warnings, ignored = 0, 0, 0, 0
     for i in test_result:
         if 'Pass' in i:
             verified += 1
-        elif 'Warn' in i:
-            failed += 1
         elif 'Fail' in i:
+            failed += 1
+        elif 'Warn' in i:
             warnings += 1
-    win.addstr(7, 20, 'Test Results:', curses.color_pair(5))
-    win.addstr(8, 22, f'Verified:       {verified}')
-    win.addstr(9, 22, f'Failed:         {failed}')
+        elif 'Ignore' in i:
+            ignored += 1
+    win.addstr(7, 20,  'Test Results:', curses.color_pair(5))
+    win.addstr(8, 22,  f'Verified        {verified}')
+    win.addstr(9, 22,  f'Failed          {failed}')
     win.addstr(10, 22, f'Warning         {warnings}')
+    win.addstr(11, 22, f'Ignored         {ignored}')
+    win.addstr(12, 22,  '               -----')
+    win.addstr(13, 22, f'                {len(test_result)}')
     win.refresh()
 
 
@@ -166,7 +171,8 @@ def build(win, subitem, stdscr, colmid, banner):
     if subitem == 0:
         # Test Results
         if fail_map == 0:
-            win.addstr(3, 1, 'All good, no tests have failed.', curses.color_pair(4))
+            msg = f'All good, no tests have failed for {host_status_text}'
+            win.addstr(3, 1, msg, curses.color_pair(4))
         else:
             fails = []
             for i in test_result:
@@ -177,7 +183,8 @@ def build(win, subitem, stdscr, colmid, banner):
                 # Could not determine host status to run tests.
                 win.addstr(3, 1, 'Could not determine host status to run tests', curses.color_pair(3))
             else:
-                win.addstr(3, 1, f'{len(fails)}/{len(test_result)} Tests Failed', curses.color_pair(3))
+                msg = f'{len(fails)}/{len(test_result)} Tests Failed for {host_status_text}'
+                win.addstr(3, 1, msg, curses.color_pair(3))
                 msg = 0
                 line = 5
                 while msg < min(len(fails), 10):

@@ -108,95 +108,281 @@ __all__ = [
 
 
 ##  Host Status Bitwise Encoding  ##
-# hostname (bits 1 to 3 with 4 to 6 kept for future use)
-podnet_a, podnet_b, appliance_a = 1, 2, 4
+# blend (bits 1 to 4)
+cop, region, copregion, pat = 2, 4, 6, 7
 
 # status (bits 7 to 9)
 validate, install, reinstall = 64, 128, 256
 
+# hostname (bits 12 up with 14 blank to allow for podnet_c in the future)
+podnet_a, podnet_b, appliance_a = 4096, 8192, 32768
+
 # host_status
-podnet_a_validate    = podnet_a    + validate      # 65
-podnet_a_install     = podnet_a    + install       # 129
-podnet_a_reinstall   = podnet_a    + reinstall     # 257
-podnet_b_validate    = podnet_b    + validate      # 66
-podnet_b_install     = podnet_b    + install       # 130
-appliance_a_validate = appliance_a + validate      # 68
-appliance_a_install  = appliance_a + install       # 132
+cop_validate_podnet_a          = cop        + validate    + podnet_a     # 4162
+cop_validate_podnet_b          = cop        + validate    + podnet_b     # 8258
+cop_validate_appliance_a       = cop        + validate    + appliance_a  # 32834
+cop_install_podnet_a           = cop        + install     + podnet_a     # 4226
+cop_install_podnet_b           = cop        + install     + podnet_b     # 8322
+cop_install_appliance_a        = cop        + install     + appliance_a  # 32898
+cop_reinstall_podnet_a         = cop        + reinstall   + podnet_a     # 4354
+region_validate_podnet_a       = region     + validate    + podnet_a     # 4164
+region_validate_podnet_b       = region     + validate    + podnet_b     # 8260
+region_validate_appliance_a    = region     + validate    + appliance_a  # 32836
+region_install_podnet_a        = region     + install     + podnet_a     # 4228
+region_install_podnet_b        = region     + install     + podnet_b     # 8324
+region_install_appliance_a     = region     + install     + appliance_a  # 32900
+region_reinstall_podnet_a      = region     + reinstall   + podnet_a     # 4356
+copregion_validate_podnet_a    = copregion  + validate    + podnet_a     # 4166
+copregion_validate_podnet_b    = copregion  + validate    + podnet_b     # 8262
+copregion_validate_appliance_a = copregion  + validate    + appliance_a  # 32838
+copregion_install_podnet_a     = copregion  + install     + podnet_a     # 4230
+copregion_install_podnet_b     = copregion  + install     + podnet_b     # 8326
+copregion_install_appliance_a  = copregion  + install     + appliance_a  # 32902
+copregion_reinstall_podnet_a   = copregion  + reinstall   + podnet_a     # 4358
+pat_validate_podnet_a          = pat        + validate    + podnet_a     # 4167
+pat_validate_podnet_b          = pat        + validate    + podnet_b     # 8263
+pat_validate_appliance_a       = pat        + validate    + appliance_a  # 32839
+pat_install_podnet_a           = pat        + install     + podnet_a     # 4231
+pat_install_podnet_b           = pat        + install     + podnet_b     # 8327
+pat_install_appliance_a        = pat        + install     + appliance_a  # 32903
+pat_reinstall_podnet_a         = pat        + reinstall   + podnet_a     # 4359
 
 
 def data_blob():
 
     set_up_sqlite()
 
-    # CIDATA dictionary will have content if CIDATA USB is mounted
+    # CIDATA dictionary mountable will be True if CIDATA USB is mounted
     cidata = get_cidata()
-    if cidata == {}:
-        cidata_mountable = False
-        podnet_b_enabled = False
-    else:
-        cidata_mountable = True
+    if cidata['mountable'] is True:
         podnet_b_enabled = cidata['config.json'].get('podnet_b_enabled', False)
+    else:
+        podnet_b_enabled = False
+        
 
     # Find the host_status
     instanciated_infra = get_instanciated_infra()
+    instanciated_metadata = get_instanciated_metadata()
+    instanciated_blend = instanciated_metadata['config.json'].get('blend', 0)
     invert = get_test_bit_map('invert')
-    if instanciated_infra['hostname'] == 'podnet-a':
-        if cidata_mountable is True:
-            if podnet_b_enabled is False:
-                host_status = podnet_a_install
-                host_status_text = "podnet_a_install"
+
+    if instanciated_blend == cop:
+        if instanciated_infra['hostname'] == 'podnet-a':
+            if cidata['mountable'] is True:
+                if podnet_b_enabled is False:
+                    host_status = cop_install_podnet_a
+                    host_status_text = "cop_install_podnet_a"
+                else:
+                    host_status = cop_reinstall_podnet_a
+                    host_status_text = "cop_reinstall_podnet_a"
             else:
-                host_status = podnet_a_reinstall
-                host_status_text = "podnet_a_reinstall"
-        else:
-            host_status = podnet_a_validate
-            host_status_text = "podnet_a_validate"
+                host_status = cop_validate_podnet_a
+                host_status_text = "cop_validate_podnet_a"
 
-    elif instanciated_infra['hostname'] == 'podnet-b':
-        if cidata_mountable is True:
-            host_status = podnet_b_install
-            host_status_text = "podnet_b_install"
-        else:
-            host_status = podnet_b_validate
-            host_status_text = "podnet_b_validate"
+        elif instanciated_infra['hostname'] == 'podnet-b':
+            if cidata['mountable'] is True:
+                host_status = cop_install_podnet_b
+                host_status_text = "cop_install_podnet_b"
+            else:
+                host_status = cop_validate_podnet_b
+                host_status_text = "cop_validate_podnet_b"
 
-    elif instanciated_infra['hostname'] == 'appliance-a':
-        if cidata_mountable is True:
-            host_status = appliance_a_install
-            host_status_text = "appliance_a_install"
+        elif instanciated_infra['hostname'] == 'appliance-a':
+            if cidata['mountable'] is True:
+                host_status = cop_install_appliance_a
+                host_status_text = "cop_install_appliance_a"
+            else:
+                host_status = cop_validate_appliance_a
+                host_status_text = "cop_validate_appliance_a"
         else:
-            host_status = appliance_a_validate
-            host_status_text = "appliance_a_validate"
+                host_status = 0
+
+    elif instanciated_blend == region:
+        if instanciated_infra['hostname'] == 'podnet-a':
+            if cidata['mountable'] is True:
+                if podnet_b_enabled is False:
+                    host_status = region_install_podnet_a
+                    host_status_text = "region_install_podnet_a"
+                else:
+                    host_status = region_reinstall_podnet_a
+                    host_status_text = "region_reinstall_podnet_a"
+            else:
+                host_status = region_validate_podnet_a
+                host_status_text = "region_validate_podnet_a"
+
+        elif instanciated_infra['hostname'] == 'podnet-b':
+            if cidata['mountable'] is True:
+                host_status = region_install_podnet_b
+                host_status_text = "region_install_podnet_b"
+            else:
+                host_status = region_validate_podnet_b
+                host_status_text = "region_validate_podnet_b"
+
+        elif instanciated_infra['hostname'] == 'appliance-a':
+            if cidata['mountable'] is True:
+                host_status = region_install_appliance_a
+                host_status_text = "region_install_appliance_a"
+            else:
+                host_status = region_validate_appliance_a
+                host_status_text = "region_validate_appliance_a"
+        else:
+                host_status = 0
+
+    elif instanciated_blend == copregion:
+        if instanciated_infra['hostname'] == 'podnet-a':
+            if cidata['mountable'] is True:
+                if podnet_b_enabled is False:
+                    host_status = copregion_install_podnet_a
+                    host_status_text = "copregion_install_podnet_a"
+                else:
+                    host_status = copregion_reinstall_podnet_a
+                    host_status_text = "copregion_reinstall_podnet_a"
+            else:
+                host_status = copregion_validate_podnet_a
+                host_status_text = "copregion_validate_podnet_a"
+
+        elif instanciated_infra['hostname'] == 'podnet-b':
+            if cidata['mountable'] is True:
+                host_status = copregion_install_podnet_b
+                host_status_text = "copregion_install_podnet_b"
+            else:
+                host_status = copregion_validate_podnet_b
+                host_status_text = "copregion_validate_podnet_b"
+
+        elif instanciated_infra['hostname'] == 'appliance-a':
+            if cidata['mountable'] is True:
+                host_status = copregion_install_appliance_a
+                host_status_text = "copregion_install_appliance_a"
+            else:
+                host_status = copregion_validate_appliance_a
+                host_status_text = "copregion_validate_appliance_a"
+        else:
+                host_status = 0
+    elif instanciated_blend == pat:
+        if instanciated_infra['hostname'] == 'podnet-a':
+            if cidata['mountable'] is True:
+                if podnet_b_enabled is False:
+                    host_status = pat_install_podnet_a
+                    host_status_text = "pat_install_podnet_a"
+                else:
+                    host_status = pat_reinstall_podnet_a
+                    host_status_text = "pat_reinstall_podnet_a"
+            else:
+                host_status = pat_validate_podnet_a
+                host_status_text = "pat_validate_podnet_a"
+
+        elif instanciated_infra['hostname'] == 'podnet-b':
+            if cidata['mountable'] is True:
+                host_status = pat_install_podnet_b
+                host_status_text = "pat_install_podnet_b"
+            else:
+                host_status = pat_validate_podnet_b
+                host_status_text = "pat_validate_podnet_b"
+
+        elif instanciated_infra['hostname'] == 'appliance-a':
+            if cidata['mountable'] is True:
+                host_status = pat_install_appliance_a
+                host_status_text = "pat_install_appliance_a"
+            else:
+                host_status = pat_validate_appliance_a
+                host_status_text = "pat_validate_appliance_a"
+        else:
+                host_status = 0
     else:
-            host_status = 0
-            host_status_text = 'Unknown'
-            fail_map = invert  # All ones representing all tests have failed
-            update_fail_map(fail_map)
+        host_status = 0
+
+    if host_status == 0:
+        host_status_text = 'Unknown'
+        fail_map = invert  # All ones representing all tests have failed
+        update_fail_map(fail_map)
     
     insert_host_status(host_status, host_status_text)
 
     # Determine which maps to use based on host_status
-    if host_status == podnet_a_validate:
-        warn = get_test_bit_map('podnet_a_validate_warn')
-        fail = get_test_bit_map('podnet_a_validate_fail')
-    elif host_status == podnet_a_install:
-        warn = get_test_bit_map('podnet_a_install_warn')
-        fail = get_test_bit_map('podnet_a_install_fail')
-    elif host_status == podnet_a_reinstall:
-        warn = get_test_bit_map('podnet_a_reinstall_warn')
-        fail = get_test_bit_map('podnet_a_reinstall_fail')
-    elif host_status == podnet_b_validate:
-        warn = get_test_bit_map('podnet_b_validate_warn')
-        fail = get_test_bit_map('podnet_b_validate_fail')
-    elif host_status == podnet_b_install:
-        warn = get_test_bit_map('podnet_b_install_warn')
-        fail = get_test_bit_map('podnet_b_install_fail')
-    elif host_status == appliance_a_validate:
-        warn = get_test_bit_map('appliance_a_validate_warn')
-        fail = get_test_bit_map('appliance_a_validate_fail')
-    elif host_status == appliance_a_install:
-        warn = get_test_bit_map('appliance_a_install_warn')
-        fail = get_test_bit_map('appliance_a_install_fail')
+    if host_status == cop_validate_podnet_a:
+        warn = get_test_bit_map('cop_validate_podnet_a_warn')
+        fail = get_test_bit_map('cop_validate_podnet_a_fail')
+    elif host_status == cop_validate_podnet_b:
+        warn = get_test_bit_map('cop_validate_podnet_b_warn')
+        fail = get_test_bit_map('cop_validate_podnet_b_fail')
+    elif host_status == cop_validate_appliance_a:
+        warn = get_test_bit_map('cop_validate_appliance_a_warn')
+        fail = get_test_bit_map('cop_validate_appliance_a_fail')
+    elif host_status == cop_install_podnet_a:
+        warn = get_test_bit_map('cop_install_podnet_a_warn')
+        fail = get_test_bit_map('cop_install_podnet_a_fail')
+    elif host_status == cop_install_podnet_b:
+        warn = get_test_bit_map('cop_install_podnet_b_warn')
+        fail = get_test_bit_map('cop_install_podnet_b_fail')
+    elif host_status == cop_install_appliance_a:
+        warn = get_test_bit_map('cop_install_appliance_a_warn')
+        fail = get_test_bit_map('cop_install_appliance_a_fail')
+    elif host_status == cop_reinstall_podnet_a:
+        warn = get_test_bit_map('cop_reinstall_podnet_a_warn')
+        fail = get_test_bit_map('cop_reinstall_podnet_a_fail')
+    elif host_status == region_validate_podnet_a:
+        warn = get_test_bit_map('region_validate_podnet_a_warn')
+        fail = get_test_bit_map('region_validate_podnet_a_fail')
+    elif host_status == region_validate_podnet_b:
+        warn = get_test_bit_map('region_validate_podnet_b_warn')
+        fail = get_test_bit_map('region_validate_podnet_b_fail')
+    elif host_status == region_validate_appliance_a:
+        warn = get_test_bit_map('region_validate_appliance_a_warn')
+        fail = get_test_bit_map('region_validate_appliance_a_fail')
+    elif host_status == region_install_podnet_a:
+        warn = get_test_bit_map('region_install_podnet_a_warn')
+        fail = get_test_bit_map('region_install_podnet_a_fail')
+    elif host_status == region_install_podnet_b:
+        warn = get_test_bit_map('region_install_podnet_b_warn')
+        fail = get_test_bit_map('region_install_podnet_b_fail')
+    elif host_status == region_install_appliance_a:
+        warn = get_test_bit_map('region_install_appliance_a_warn')
+        fail = get_test_bit_map('region_install_appliance_a_fail')
+    elif host_status == region_reinstall_podnet_a:
+        warn = get_test_bit_map('region_reinstall_podnet_a_warn')
+        fail = get_test_bit_map('region_reinstall_podnet_a_fail')
+    elif host_status == copregion_validate_podnet_a:
+        warn = get_test_bit_map('copregion_validate_podnet_a_warn')
+        fail = get_test_bit_map('copregion_validate_podnet_a_fail')
+    elif host_status == copregion_validate_podnet_b:
+        warn = get_test_bit_map('copregion_validate_podnet_b_warn')
+        fail = get_test_bit_map('copregion_validate_podnet_b_fail')
+    elif host_status == copregion_validate_appliance_a:
+        warn = get_test_bit_map('copregion_validate_appliance_a_warn')
+        fail = get_test_bit_map('copregion_validate_appliance_a_fail')
+    elif host_status == copregion_install_podnet_a:
+        warn = get_test_bit_map('copregion_install_podnet_a_warn')
+        fail = get_test_bit_map('copregion_install_podnet_a_fail')
+    elif host_status == copregion_install_podnet_b:
+        warn = get_test_bit_map('copregion_install_podnet_b_warn')
+        fail = get_test_bit_map('copregion_install_podnet_b_fail')
+    elif host_status == copregion_install_appliance_a:
+        warn = get_test_bit_map('copregion_install_appliance_a_warn')
+        fail = get_test_bit_map('copregion_install_appliance_a_fail')
+    elif host_status == copregion_reinstall_podnet_a:
+        warn = get_test_bit_map('copregion_reinstall_podnet_a_warn')
+        fail = get_test_bit_map('copregion_reinstall_podnet_a_fail')
+    elif host_status == pat_validate_podnet_a:
+        warn = get_test_bit_map('pat_validate_podnet_a_warn')
+        fail = get_test_bit_map('pat_validate_podnet_a_fail')
+    elif host_status == pat_validate_podnet_b:
+        warn = get_test_bit_map('pat_validate_podnet_b_warn')
+        fail = get_test_bit_map('pat_validate_podnet_b_fail')
+    elif host_status == pat_validate_appliance_a:
+        warn = get_test_bit_map('pat_validate_appliance_a_warn')
+        fail = get_test_bit_map('pat_validate_appliance_a_fail')
+    elif host_status == pat_install_podnet_a:
+        warn = get_test_bit_map('pat_install_podnet_a_warn')
+        fail = get_test_bit_map('pat_install_podnet_a_fail')
+    elif host_status == pat_install_podnet_b:
+        warn = get_test_bit_map('pat_install_podnet_b_warn')
+        fail = get_test_bit_map('pat_install_podnet_b_fail')
+    elif host_status == pat_install_appliance_a:
+        warn = get_test_bit_map('pat_install_appliance_a_warn')
+        fail = get_test_bit_map('pat_install_appliance_a_fail')
+    elif host_status == pat_reinstall_podnet_a:
+        warn = get_test_bit_map('pat_reinstall_podnet_a_warn')
+        fail = get_test_bit_map('pat_reinstall_podnet_a_fail')
     else:
         warn = 0b0
         fail = 0b0
@@ -232,7 +418,7 @@ def data_blob():
     config_matches(20)
     inst_conf_pnum(21)
     inst_conf_pnam(22)
-    inst_conf_blen(23)
+    inst_conf_blen(23, [cop, region, copregion, pat])
     inst_conf_aena(24)
     inst_conf_aenb(25)
     inst_conf_bena(26)

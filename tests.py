@@ -6,17 +6,11 @@ import psutil
 # local
 from interface_utils import read_interface_file
 from sql_utils import (
-    # blends
-    cop_blend,
-    copregion_blend,
-    pat_blend,
-    region_blend,
     # methods
     get_cidata,
     get_instanciated_infra,
     get_instanciated_metadata,
     get_test_details,
-    region_flavor,
     update_test_details,
 )
 
@@ -515,7 +509,6 @@ def hard_oob__ethn(test_id):
 # 2.4.1 Private Port Operstate - Region Flavor Pods
 def hard_priv_oper(test_id):
     result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
-    instanciated_metadata = get_instanciated_metadata()
 
     pass_message   = '2.4.1 Hardware private0  - Pass - Operstate = '
     warn_message   = '2.4.1 Hardware private0  - Warn - Operstate = '
@@ -523,9 +516,8 @@ def hard_priv_oper(test_id):
     ignore_message = '2.4.1 Hardware private0  - Ignore'
 
     test_map_bit = 2**test_id
-    instanciated_blend = instanciated_metadata['config.json'].get('blend', 0)
 
-    if test_map_bit & ignore or (region_flavor & instanciated_blend == 0): # Test Ignore
+    if test_map_bit & ignore:                                           # Test Ignore
         ignore_map += test_map_bit
         result[test_id] = ignore_message
         update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -533,7 +525,7 @@ def hard_priv_oper(test_id):
 
     operstate = read_interface_file('private0', 'operstate')
 
-    if operstate == 'up':                                                  # Test pass
+    if operstate == 'up':                                                # Test pass
         pass_map += test_map_bit
         result[test_id] = f'{pass_message} {operstate}'
     else:
@@ -549,7 +541,6 @@ def hard_priv_oper(test_id):
 # 2.4.2 Private Port Carrier - Region Flavor Pods
 def hard_priv_carr(test_id):
     result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
-    instanciated_metadata = get_instanciated_metadata()
 
     pass_message   = '2.4.2 Hardware private0  - Pass - Carrier = '
     warn_message   = '2.4.2 Hardware private0  - Warn - Carrier = '
@@ -557,9 +548,8 @@ def hard_priv_carr(test_id):
     ignore_message = '2.4.2 Hardware private0  - Ignore'
 
     test_map_bit = 2**test_id
-    instanciated_blend = instanciated_metadata['config.json'].get('blend', 0)
 
-    if test_map_bit & ignore or (region_flavor & instanciated_blend == 0): # Test Ignore
+    if test_map_bit & ignore:                                         # Test Ignore
         ignore_map += test_map_bit
         result[test_id] = ignore_message
         update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -567,7 +557,7 @@ def hard_priv_carr(test_id):
 
     carrier = read_interface_file('private0', 'carrier')
 
-    if carrier == '1':                                                  # Test pass
+    if carrier == '1':                                                # Test pass
         pass_map += test_map_bit
         result[test_id] = f'{pass_message} {carrier}'
     else:
@@ -583,7 +573,6 @@ def hard_priv_carr(test_id):
 # 2.4.3 Private Port Ethernet Name - Region Flavor Pods
 def hard_priv_ethn(test_id):
     result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
-    instanciated_metadata = get_instanciated_metadata()
 
     pass_message   = '2.4.3 Hardware private0  - Pass - Ethernet Name Match'
     warn_message   = '2.4.3 Hardware private0  - Warn - Ethernet Name = '
@@ -591,15 +580,15 @@ def hard_priv_ethn(test_id):
     ignore_message = '2.4.3 Hardware private0  - Ignore'
 
     test_map_bit = 2**test_id
-    instanciated_blend = instanciated_metadata['config.json'].get('blend', 0)
 
-    if test_map_bit & ignore or (region_flavor & instanciated_blend == 0): # Test Ignore
+    if test_map_bit & ignore:                                         # Test Ignore
         ignore_map += test_map_bit
         result[test_id] = ignore_message
         update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
         return
 
     instanciated_infra = get_instanciated_infra()
+    instanciated_metadata = get_instanciated_metadata()
     metadata_field = f'{instanciated_infra["hostname"].replace("-", "_")}_private_ifname'
     metadata_name = instanciated_metadata['config.json'].get(metadata_field, '')
     infra_name = 'Not Found'
@@ -612,14 +601,14 @@ def hard_priv_ethn(test_id):
     except KeyError:
         pass
 
-    if metadata_name == infra_name:                                     # Test pass
+    if metadata_name == infra_name:                                    # Test pass
         pass_map += test_map_bit
         result[test_id] = f'{pass_message}'
     else:
-        if test_map_bit & fail:                                       # Test fail
+        if test_map_bit & fail:                                        # Test fail
             fail_map += test_map_bit
             result[test_id] = f'{fail_message} {metadata_name} != {infra_name}'
-        elif test_map_bit & warn:                                     # Test warn
+        elif test_map_bit & warn:                                      # Test warn
             warn_map += test_map_bit
             result[test_id] = f'{warn_message} {metadata_name} != {infra_name}'
     update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -628,7 +617,6 @@ def hard_priv_ethn(test_id):
 # 2.5.1 Inter Port Operstate - Region Flavor Pods
 def hard_intr_oper(test_id):
     result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
-    instanciated_metadata = get_instanciated_metadata()
 
     pass_message   = '2.5.1 Hardware inter0  - Pass - Operstate = '
     warn_message   = '2.5.1 Hardware inter0  - Warn - Operstate = '
@@ -637,8 +625,7 @@ def hard_intr_oper(test_id):
 
     test_map_bit = 2**test_id
 
-    instanciated_blend = instanciated_metadata['config.json'].get('blend', 0)
-    if test_map_bit & ignore or (region_flavor & instanciated_blend == 0): # Test Ignore
+    if test_map_bit & ignore:                                          # Test Ignore
         ignore_map += test_map_bit
         result[test_id] = ignore_message
         update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -646,7 +633,7 @@ def hard_intr_oper(test_id):
 
     operstate = read_interface_file('inter0', 'operstate')
 
-    if operstate == 'up':                                               # Test pass
+    if operstate == 'up':                                             # Test pass
         pass_map += test_map_bit
         result[test_id] = f'{pass_message} {operstate}'
     else:
@@ -662,7 +649,6 @@ def hard_intr_oper(test_id):
 # 2.5.2 Inter Port Carrier - Region Flavor Pods
 def hard_intr_carr(test_id):
     result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
-    instanciated_metadata = get_instanciated_metadata()
 
     pass_message   = '2.5.2 Hardware inter0  - Pass - Carrier = '
     warn_message   = '2.5.2 Hardware inter0  - Warn - Carrier = '
@@ -670,9 +656,8 @@ def hard_intr_carr(test_id):
     ignore_message = '2.5.2 Hardware inter0  - Ignore'
 
     test_map_bit = 2**test_id
-    instanciated_blend = instanciated_metadata['config.json'].get('blend', 0)
 
-    if test_map_bit & ignore or (region_flavor & instanciated_blend == 0): # Test Ignore
+    if test_map_bit & ignore:                                         # Test Ignore
         ignore_map += test_map_bit
         result[test_id] = ignore_message
         update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -680,7 +665,7 @@ def hard_intr_carr(test_id):
 
     carrier = read_interface_file('inter0', 'carrier')
 
-    if carrier == '1':                                                  # Test pass
+    if carrier == '1':                                                # Test pass
         pass_map += test_map_bit
         result[test_id] = f'{pass_message} {carrier}'
     else:
@@ -696,7 +681,6 @@ def hard_intr_carr(test_id):
 # 2.5.3 Inter Port Ethernet Name - Region Flavor Pods
 def hard_intr_ethn(test_id):
     result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
-    instanciated_metadata = get_instanciated_metadata()
 
     pass_message   = '2.5.3 Hardware inter0  - Pass - Ethernet Name Match'
     warn_message   = '2.5.3 Hardware inter0  - Warn - Ethernet Name = '
@@ -704,15 +688,15 @@ def hard_intr_ethn(test_id):
     ignore_message = '2.5.3 Hardware inter0  - Ignore'
 
     test_map_bit = 2**test_id
-    instanciated_blend = instanciated_metadata['config.json'].get('blend', 0)
 
-    if test_map_bit & ignore or (region_flavor & instanciated_blend == 0): # Test Ignore
+    if test_map_bit & ignore:                                        # Test Ignore
         ignore_map += test_map_bit
         result[test_id] = ignore_message
         update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
         return
 
     instanciated_infra = get_instanciated_infra()
+    instanciated_metadata = get_instanciated_metadata()
     metadata_field = f'{instanciated_infra["hostname"].replace("-", "_")}_inter_ifname'
     metadata_name = instanciated_metadata['config.json'].get(metadata_field, '')
     infra_name = 'Not Found'
@@ -725,7 +709,7 @@ def hard_intr_ethn(test_id):
     except KeyError:
         pass
 
-    if metadata_name == infra_name:                                     # Test pass
+    if metadata_name == infra_name:                                   # Test pass
         pass_map += test_map_bit
         result[test_id] = f'{pass_message}'
     else:
@@ -749,7 +733,7 @@ def config_matches(test_id):
 
     test_map_bit = 2**test_id
 
-    if test_map_bit & ignore:                                           # Test Ignore
+    if test_map_bit & ignore:                                          # Test Ignore
         ignore_map += test_map_bit
         result[test_id] = ignore_message
         update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -783,7 +767,7 @@ def inst_conf_pnum(test_id):
 
     test_map_bit = 2 ** test_id
 
-    if test_map_bit & ignore:  # Test Ignore
+    if test_map_bit & ignore:                                       # Test Ignore
         ignore_map += test_map_bit
         result[test_id] = ignore_message
         update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -792,14 +776,14 @@ def inst_conf_pnum(test_id):
     instanciated_metadata = get_instanciated_metadata()
     pod_number = instanciated_metadata['config.json'].get('pod_number', -1)
 
-    if int(pod_number) in range(0, 255):  # Test pass
+    if int(pod_number) in range(0, 255):                            # Test pass
         pass_map += test_map_bit
         result[test_id] = f'{pass_message}'
     else:
-        if test_map_bit & fail:  # Test fail
+        if test_map_bit & fail:                                     # Test fail
             fail_map += test_map_bit
             result[test_id] = f'{fail_message}'
-        elif test_map_bit & warn:  # Test warn
+        elif test_map_bit & warn:                                   # Test warn
             warn_map += test_map_bit
             result[test_id] = f'{warn_message}'
     update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -817,7 +801,7 @@ def inst_conf_pnam(test_id):
 
     test_map_bit = 2 ** test_id
 
-    if test_map_bit & ignore:  # Test Ignore
+    if test_map_bit & ignore:                                       # Test Ignore
         ignore_map += test_map_bit
         result[test_id] = ignore_message
         update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -826,14 +810,14 @@ def inst_conf_pnam(test_id):
     instanciated_metadata = get_instanciated_metadata()
     pod_name = instanciated_metadata['config.json'].get('pod_name', '')
 
-    if pod_name != '':  # Test pass
+    if pod_name != '':                                              # Test pass
         pass_map += test_map_bit
         result[test_id] = f'{pass_message} {pod_name}'
     else:
-        if test_map_bit & fail:  # Test fail
+        if test_map_bit & fail:                                     # Test fail
             fail_map += test_map_bit
             result[test_id] = f'{fail_message} {pod_name}'
-        elif test_map_bit & warn:  # Test warn
+        elif test_map_bit & warn:                                   # Test warn
             warn_map += test_map_bit
             result[test_id] = f'{warn_message} {pod_name}'
     update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -841,7 +825,7 @@ def inst_conf_pnam(test_id):
 
 
 # 3.2.3 Validation of blend from Instantiated Metadata config.json
-def inst_conf_blen(test_id):
+def inst_conf_blen(test_id, allowed_blends):
     result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
 
     pass_message   = '3.2.3 Instanciated config.json `blend` - Pass - Valid'
@@ -851,7 +835,7 @@ def inst_conf_blen(test_id):
 
     test_map_bit = 2 ** test_id
 
-    if test_map_bit & ignore:  # Test Ignore
+    if test_map_bit & ignore:                                       # Test Ignore
         ignore_map += test_map_bit
         result[test_id] = ignore_message
         update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -860,14 +844,14 @@ def inst_conf_blen(test_id):
     instanciated_metadata = get_instanciated_metadata()
     blend = instanciated_metadata['config.json'].get('blend', 0)
 
-    if int(blend) in [cop_blend, copregion_blend, pat_blend, region_blend]:  # Test pass
+    if int(blend) in allowed_blends:                                # Test pass
         pass_map += test_map_bit
         result[test_id] = f'{pass_message}'
     else:
-        if test_map_bit & fail:  # Test fail
+        if test_map_bit & fail:                                     # Test fail
             fail_map += test_map_bit
             result[test_id] = f'{fail_message}'
-        elif test_map_bit & warn:  # Test warn
+        elif test_map_bit & warn:                                   # Test warn
             warn_map += test_map_bit
             result[test_id] = f'{warn_message}'
     update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -885,7 +869,7 @@ def inst_conf_aena(test_id):
 
     test_map_bit = 2 ** test_id
 
-    if test_map_bit & ignore:  # Test Ignore
+    if test_map_bit & ignore:                                       # Test Ignore
         ignore_map += test_map_bit
         result[test_id] = ignore_message
         update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -894,14 +878,14 @@ def inst_conf_aena(test_id):
     instanciated_metadata = get_instanciated_metadata()
     podnet_a_enable = instanciated_metadata['config.json'].get('podnet_a_enable', True)
 
-    if podnet_a_enable is False:  # Test pass
+    if podnet_a_enable is False:                                    # Test pass
         pass_map += test_map_bit
         result[test_id] = f'{pass_message}'
     else:
-        if test_map_bit & fail:  # Test fail
+        if test_map_bit & fail:                                     # Test fail
             fail_map += test_map_bit
             result[test_id] = f'{fail_message}'
-        elif test_map_bit & warn:  # Test warn
+        elif test_map_bit & warn:                                   # Test warn
             warn_map += test_map_bit
             result[test_id] = f'{warn_message}'
     update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -919,7 +903,7 @@ def inst_conf_aenb(test_id):
 
     test_map_bit = 2 ** test_id
 
-    if test_map_bit & ignore:  # Test Ignore
+    if test_map_bit & ignore:                                       # Test Ignore
         ignore_map += test_map_bit
         result[test_id] = ignore_message
         update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -928,14 +912,14 @@ def inst_conf_aenb(test_id):
     instanciated_metadata = get_instanciated_metadata()
     podnet_a_enable = instanciated_metadata['config.json'].get('podnet_a_enable', 123)
 
-    if type(podnet_a_enable) is bool:  # Test pass
+    if type(podnet_a_enable) is bool:                               # Test pass
         pass_map += test_map_bit
         result[test_id] = f'{pass_message}'
     else:
-        if test_map_bit & fail:  # Test fail
+        if test_map_bit & fail:                                     # Test fail
             fail_map += test_map_bit
             result[test_id] = f'{fail_message}'
-        elif test_map_bit & warn:  # Test warn
+        elif test_map_bit & warn:                                   # Test warn
             warn_map += test_map_bit
             result[test_id] = f'{warn_message}'
     update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -953,7 +937,7 @@ def inst_conf_bena(test_id):
 
     test_map_bit = 2 ** test_id
 
-    if test_map_bit & ignore:  # Test Ignore
+    if test_map_bit & ignore:                                       # Test Ignore
         ignore_map += test_map_bit
         result[test_id] = ignore_message
         update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -962,14 +946,14 @@ def inst_conf_bena(test_id):
     instanciated_metadata = get_instanciated_metadata()
     podnet_b_enable = instanciated_metadata['config.json'].get('podnet_b_enable', True)
 
-    if podnet_b_enable is False:  # Test pass
+    if podnet_b_enable is False:                                    # Test pass
         pass_map += test_map_bit
         result[test_id] = f'{pass_message}'
     else:
-        if test_map_bit & fail:  # Test fail
+        if test_map_bit & fail:                                     # Test fail
             fail_map += test_map_bit
             result[test_id] = f'{fail_message}'
-        elif test_map_bit & warn:  # Test warn
+        elif test_map_bit & warn:                                   # Test warn
             warn_map += test_map_bit
             result[test_id] = f'{warn_message}'
     update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -987,7 +971,7 @@ def inst_conf_benb(test_id):
 
     test_map_bit = 2 ** test_id
 
-    if test_map_bit & ignore:  # Test Ignore
+    if test_map_bit & ignore:                                       # Test Ignore
         ignore_map += test_map_bit
         result[test_id] = ignore_message
         update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -996,14 +980,14 @@ def inst_conf_benb(test_id):
     instanciated_metadata = get_instanciated_metadata()
     podnet_b_enable = instanciated_metadata['config.json'].get('podnet_b_enable', 123)
 
-    if type(podnet_b_enable) is bool:  # Test pass
+    if type(podnet_b_enable) is bool:                               # Test pass
         pass_map += test_map_bit
         result[test_id] = f'{pass_message}'
     else:
-        if test_map_bit & fail:  # Test fail
+        if test_map_bit & fail:                                     # Test fail
             fail_map += test_map_bit
             result[test_id] = f'{fail_message}'
-        elif test_map_bit & warn:  # Test warn
+        elif test_map_bit & warn:                                   # Test warn
             warn_map += test_map_bit
             result[test_id] = f'{warn_message}'
     update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -1021,7 +1005,7 @@ def inst_conf_aben(test_id):
 
     test_map_bit = 2 ** test_id
 
-    if test_map_bit & ignore:  # Test Ignore
+    if test_map_bit & ignore:                                       # Test Ignore
         ignore_map += test_map_bit
         result[test_id] = ignore_message
         update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -1032,13 +1016,13 @@ def inst_conf_aben(test_id):
     podnet_b_enable = instanciated_metadata['config.json'].get('podnet_b_enable', True)
 
     if podnet_a_enable is True and podnet_b_enable is True:
-        if test_map_bit & fail:  # Test fail
+        if test_map_bit & fail:                                     # Test fail
             fail_map += test_map_bit
             result[test_id] = f'{fail_message}'
-        elif test_map_bit & warn:  # Test warn
+        elif test_map_bit & warn:                                   # Test warn
             warn_map += test_map_bit
             result[test_id] = f'{warn_message}'
-    else:  # Test pass
+    else:                                                           # Test pass
         pass_map += test_map_bit
         result[test_id] = f'{pass_message}'
     update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -1056,7 +1040,7 @@ def inst_conf_ip4l(test_id):
 
     test_map_bit = 2 ** test_id
 
-    if test_map_bit & ignore:  # Test Ignore
+    if test_map_bit & ignore:                                       # Test Ignore
         ignore_map += test_map_bit
         result[test_id] = ignore_message
         update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -1065,14 +1049,14 @@ def inst_conf_ip4l(test_id):
     instanciated_metadata = get_instanciated_metadata()
     mask = instanciated_metadata['config.json'].get('ipv4_link_subnet', '0.0.0.0/30').split('/')[1]
 
-    if int(mask) <= 29:  # Test pass
+    if int(mask) <= 29:                                            # Test pass
         pass_map += test_map_bit
         result[test_id] = f'{pass_message}'
     else:
-        if test_map_bit & fail:  # Test fail
+        if test_map_bit & fail:                                    # Test fail
             fail_map += test_map_bit
             result[test_id] = f'{fail_message}'
-        elif test_map_bit & warn:  # Test warn
+        elif test_map_bit & warn:                                  # Test warn
             warn_map += test_map_bit
             result[test_id] = f'{warn_message}'
     update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
@@ -1231,15 +1215,14 @@ def inst_conf_cmon(test_id):
     ignore_message = '3.2.13 Instanciated config.json `ceph_monitors` - Ignore'
 
     test_map_bit = 2 ** test_id
-    instanciated_metadata = get_instanciated_metadata()
-    instanciated_blend = instanciated_metadata['config.json'].get('blend', 0)
 
-    if test_map_bit & ignore or (region_flavor & instanciated_blend == 0): # Test Ignore
+    if test_map_bit & ignore:                                      # Test Ignore
         ignore_map += test_map_bit
         result[test_id] = ignore_message
         update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
         return
 
+    instanciated_metadata = get_instanciated_metadata()
     ceph_monitors = instanciated_metadata['config.json'].get('ceph_monitors', [])
     ipv6_subnet = instanciated_metadata['config.json'].get('ipv6_subnet', '::/127')
     valid = True
@@ -1252,14 +1235,14 @@ def inst_conf_cmon(test_id):
             valid = False
             break
 
-    if type(ceph_monitors) is list and valid is True:  # Test pass
+    if type(ceph_monitors) is list and valid is True:             # Test pass
         pass_map += test_map_bit
         result[test_id] = f'{pass_message}'
     else:
-        if test_map_bit & fail:  # Test fail
+        if test_map_bit & fail:                                   # Test fail
             fail_map += test_map_bit
             result[test_id] = f'{fail_message}'
-        elif test_map_bit & warn:  # Test warn
+        elif test_map_bit & warn:                                 # Test warn
             warn_map += test_map_bit
             result[test_id] = f'{warn_message}'
     update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
