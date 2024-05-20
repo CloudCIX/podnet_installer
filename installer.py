@@ -1,9 +1,11 @@
 # stdlib
 import curses
+import importlib
 # libs
 # local
 from data_blob import data_blob
 from logo import logo
+from sql_utils import get_instanciated_infra, get_instanciated_metadata
 
 
 class ScreenTooSmallError(Exception):
@@ -73,6 +75,7 @@ def copyright():
     user_input = stdscr.getkey()
     while user_input != '\n':
         user_input = win.getkey()
+
 
 def summary():
     win = curses.newwin(20, 84, 8, colmid - 42)
@@ -167,6 +170,7 @@ def main_menu(stdscr):
             stdscr.addstr(5, 2 + count * delta, column, curses.color_pair(1) | curses.A_BOLD)
     stdscr.refresh()
 
+
 def build(win, subitem, stdscr, colmid, banner):
     if subitem == 0:
         # Test Results
@@ -197,17 +201,24 @@ def build(win, subitem, stdscr, colmid, banner):
         win.refresh()
         win.getch()
     elif subitem == 1:
-        # Configure Pod
-        if fail_map == 0:
-            win.addstr(3, 1, 'Configure Pod')
-        else:
-            win.addstr(3, 1, 'One or more Tests have failed, cannot configure Pod', curses.color_pair(3))
-
         line1 = 'This menu will configure the Pod.'
         stdscr.addstr(29, colmid - 42, line1, curses.color_pair(1))
         stdscr.refresh()
+        # Configure Pod
+        if fail_map == 0:
+            win.addstr(3, 1, 'Configure Pod')
+            win.refresh()
+            win.getch()
+            # call the host_status specific installer script
+            installer_script = importlib.import_module(f'installer_scripts.{host_status_text}')
+            config_data = get_instanciated_metadata()['config.json']
+            netplan_data = get_instanciated_infra()['netplan']
+            installer_script.build(win, config_data, netplan_data)
+        else:
+            win.addstr(3, 1, 'One or more Tests have failed, cannot configure Pod', curses.color_pair(3))
         win.refresh()
         win.getch()
+
 
 def edit_window(stdscr):
     # The rectangular window containing either the submenu of the selected submenu functionality
@@ -303,6 +314,7 @@ def main(stdscr):
             # A submenu was selected, so go process it in the edit_window
             edit_window(stdscr)
         # No submenu was selected, so go around the loop again
+
 
 try:
     curses.wrapper(main)
