@@ -251,7 +251,8 @@ def create_instanciated_infra():
     }
     # netplan
     try:
-        with open('/etc/netplan/00-installer-config.yaml', 'r') as file:
+        with open('/etc/cloudcix/pod/pod_installer/configs/config.json', 'r') as json_file:
+
             instanciated_infra['netplan'] = yaml.safe_load(file)
     except FileNotFoundError:
         pass
