@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/etc/cloudcix/pod/pod_installer/.venv/bin/python3
 # stdlib
 import curses
 import importlib
