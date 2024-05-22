@@ -2,6 +2,7 @@
 # stdlib
 import curses
 import importlib
+import os
 # libs
 # local
 from data_blob import data_blob
@@ -12,6 +13,7 @@ from sql_utils import get_instanciated_infra, get_instanciated_metadata
 class ScreenTooSmallError(Exception):
     """Raise when the screen is too small to display information properly """
 
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 # Setting up the Screen
 # Create a screen
@@ -65,7 +67,7 @@ menu_list = ['Test Results', 'Configure']
 def copyright():
     banner(True, 'header')
     win = curses.newwin(23, 84, 5, colmid - 42)
-    with open('./copyright.txt') as file:
+    with open(f'{dir_path}/copyright.txt') as file:
         copyright_text = file.read()
     try:
         win.addstr(1, 1, copyright_text)
