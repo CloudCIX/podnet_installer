@@ -92,6 +92,7 @@ from sql_utils import (
     get_cidata,
     get_host_details,
     get_instanciated_infra,
+    get_instanciated_metadata,
     get_test_bit_map,
     get_test_results,
     insert_host_status,
