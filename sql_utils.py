@@ -20,7 +20,7 @@ __all__ = [
 
 def set_up_sqlite():
     # Create required Tables if they do not exist and clear from previous sessions
-    with sqlite3.connect('installer.db') as conn:
+    with sqlite3.connect('/etc/cloudcix/pod/installer.db') as conn:
         cur = conn.cursor()
         # Create required tables if they do not exist
         cur.execute('CREATE TABLE IF NOT EXISTS test_map (name TEXT, bit_map TEXT);')
@@ -190,7 +190,7 @@ def set_up_sqlite():
     session_query = 'INSERT INTO session_constants (id, cidata, instanciated_metadata, instanciated_infra) VALUES (?, ?, ?, ?)'
     session_values = (1, pickle.dumps(cidata), pickle.dumps(instanciated_metadata), pickle.dumps(instanciated_infra))
 
-    with sqlite3.connect('installer.db') as conn:
+    with sqlite3.connect('/etc/cloudcix/pod/installer.db') as conn:
         cur = conn.cursor()
         # Add data to tables in database
         cur.executemany('INSERT INTO test_map (name, bit_map) VALUES (?, ?)', test_map)
@@ -270,7 +270,7 @@ def create_instanciated_metadata():
     }
     # Instanciated config.json
     try:
-        with open('/etc/cloudcix/pod/pod_installer/configs/config.json', 'r') as file:
+        with open('/etc/cloudcix/pod/configs/config.json', 'r') as file:
             instanciated_metadata['config.json'] = json.load(file)
     except FileNotFoundError:
         pass
@@ -293,7 +293,7 @@ def create_instanciated_metadata():
 
 
 def get_cidata():
-    with sqlite3.connect('installer.db') as conn:
+    with sqlite3.connect('/etc/cloudcix/pod/installer.db') as conn:
         cur = conn.cursor()
         cur.execute(f'SELECT cidata FROM session_constants WHERE id = 1;')
         cidata = cur.fetchone()[0]
@@ -303,7 +303,7 @@ def get_cidata():
 
 
 def get_test_bit_map(name):
-    with sqlite3.connect('installer.db') as conn:
+    with sqlite3.connect('/etc/cloudcix/pod/installer.db') as conn:
         cur = conn.cursor()
         cur.execute(f"SELECT bit_map FROM test_map WHERE name = '{name}'")
         bit_map = cur.fetchone()[0]
@@ -313,7 +313,7 @@ def get_test_bit_map(name):
 
 
 def get_host_details():
-    with sqlite3.connect('installer.db') as conn:
+    with sqlite3.connect('/etc/cloudcix/pod/installer.db') as conn:
         cur = conn.cursor()
         cur.execute(f'SELECT host_status, host_status_text FROM host_details WHERE id = 1;')
         details = cur.fetchone()
@@ -323,7 +323,7 @@ def get_host_details():
 
 
 def get_instanciated_metadata():
-    with sqlite3.connect('installer.db') as conn:
+    with sqlite3.connect('/etc/cloudcix/pod/installer.db') as conn:
         cur = conn.cursor()
         cur.execute(f'SELECT instanciated_metadata FROM session_constants WHERE id = 1;')
         instanciated_metadata = cur.fetchone()[0]
@@ -333,7 +333,7 @@ def get_instanciated_metadata():
 
 
 def get_instanciated_infra():
-    with sqlite3.connect('installer.db') as conn:
+    with sqlite3.connect('/etc/cloudcix/pod/installer.db') as conn:
         cur = conn.cursor()
         cur.execute(f'SELECT instanciated_infra FROM session_constants WHERE id = 1;')
         instanciated_infra = cur.fetchone()[0]
@@ -344,7 +344,7 @@ def get_instanciated_infra():
 
 def get_test_details():
     # result BLOB, fail TEXT, ignore TEXT, warn TEXT, fail_map TEST, warn_map TEXT, ignore_map TEXT, pass_map TEXT
-    with sqlite3.connect('installer.db') as conn:
+    with sqlite3.connect('/etc/cloudcix/pod/installer.db') as conn:
         cur = conn.cursor()
         cur.execute('''
             SELECT result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map FROM test_details WHERE id = 1;
@@ -365,7 +365,7 @@ def get_test_details():
 
 
 def get_test_results():
-    with sqlite3.connect('installer.db') as conn:
+    with sqlite3.connect('/etc/cloudcix/pod/installer.db') as conn:
         cur = conn.cursor()
         cur.execute('SELECT fail_map, warn_map, pass_map, result FROM test_details WHERE id = 1;')
         details = cur.fetchone()
@@ -382,7 +382,7 @@ def get_test_results():
 def insert_host_status(host_status, host_status_text):
     query = f"INSERT INTO host_details VALUES (?, ?, ?);"
     values = (1, host_status, host_status_text)
-    with sqlite3.connect('installer.db') as conn:
+    with sqlite3.connect('/etc/cloudcix/pod/installer.db') as conn:
         cur = conn.cursor()
         cur.execute(query, values)
         conn.commit()
@@ -393,7 +393,7 @@ def insert_host_status(host_status, host_status_text):
 def update_fail_map(fail_map):
     query = 'UPDATE test_details SET fail_map = ? WHERE id = 1;'
     values = (str(fail_map),)
-    with sqlite3.connect('installer.db') as conn:
+    with sqlite3.connect('/etc/cloudcix/pod/installer.db') as conn:
         cur = conn.cursor()
         cur.execute(query, values)
         conn.commit()
@@ -411,7 +411,7 @@ def update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_m
         pickle.dumps(result), str(fail), str(ignore), str(warn), str(fail_map), str(warn_map),
         str(ignore_map), str(pass_map)
     )
-    with sqlite3.connect('installer.db') as conn:
+    with sqlite3.connect('/etc/cloudcix/pod/installer.db') as conn:
         cur = conn.cursor()
         cur.execute(query, values)
         conn.commit()
@@ -425,7 +425,7 @@ def update_test_levels(fail, ignore, warn):
         f"UPDATE test_details SET fail = ?, ignore = ?, warn = ? WHERE id = 1;"
     )
     values = (str(fail), str(ignore), str(warn))
-    with sqlite3.connect('installer.db') as conn:
+    with sqlite3.connect('/etc/cloudcix/pod/installer.db') as conn:
         cur = conn.cursor()
         cur.execute(query, values)
         conn.commit()
