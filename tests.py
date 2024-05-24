@@ -858,14 +858,14 @@ def inst_conf_blen(test_id, allowed_blends):
     return
 
 
-# 3.2.4 Validation of `podnet_a_enable` from Instantiated Metadata config.json
+# 3.2.4 Validation of `podnet_a_enabled` from Instantiated Metadata config.json
 def inst_conf_aena(test_id):
     result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
 
-    pass_message   = '3.2.4 Instanciated config.json `podnet_a_enable` - Pass - is False'
-    warn_message   = '3.2.4 Instanciated config.json `podnet_a_enable` - Warn - is True'
-    fail_message   = '3.2.4 Instanciated config.json `podnet_a_enable` - Fail - is True'
-    ignore_message = '3.2.4 Instanciated config.json `podnet_a_enable` - Ignore'
+    pass_message   = '3.2.4 Instanciated config.json `podnet_a_enabled` - Pass - is False'
+    warn_message   = '3.2.4 Instanciated config.json `podnet_a_enabled` - Warn - is True'
+    fail_message   = '3.2.4 Instanciated config.json `podnet_a_enabled` - Fail - is True'
+    ignore_message = '3.2.4 Instanciated config.json `podnet_a_enabled` - Ignore'
 
     test_map_bit = 2 ** test_id
 
@@ -876,9 +876,9 @@ def inst_conf_aena(test_id):
         return
 
     instanciated_metadata = get_instanciated_metadata()
-    podnet_a_enable = instanciated_metadata['config.json'].get('podnet_a_enable', True)
+    podnet_a_enabled = instanciated_metadata['config.json'].get('podnet_a_enabled', True)
 
-    if podnet_a_enable is False:                                    # Test pass
+    if podnet_a_enabled is False:                                    # Test pass
         pass_map += test_map_bit
         result[test_id] = f'{pass_message}'
     else:
@@ -892,14 +892,14 @@ def inst_conf_aena(test_id):
     return
 
 
-# 3.2.5 Validation of `podnet_a_enable` from Instantiated Metadata config.json
+# 3.2.5 Validation of `podnet_a_enabled` from Instantiated Metadata config.json
 def inst_conf_aenb(test_id):
     result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
 
-    pass_message   = '3.2.5 Instanciated config.json `podnet_a_enable` - Pass - Boolean'
-    warn_message   = '3.2.5 Instanciated config.json `podnet_a_enable` - Warn - not Boolean'
-    fail_message   = '3.2.5 Instanciated config.json `podnet_a_enable` - Fail - not Boolean'
-    ignore_message = '3.2.5 Instanciated config.json `podnet_a_enable` - Ignore'
+    pass_message   = '3.2.5 Instanciated config.json `podnet_a_enabled` - Pass - Boolean'
+    warn_message   = '3.2.5 Instanciated config.json `podnet_a_enabled` - Warn - not Boolean'
+    fail_message   = '3.2.5 Instanciated config.json `podnet_a_enabled` - Fail - not Boolean'
+    ignore_message = '3.2.5 Instanciated config.json `podnet_a_enabled` - Ignore'
 
     test_map_bit = 2 ** test_id
 
@@ -910,9 +910,9 @@ def inst_conf_aenb(test_id):
         return
 
     instanciated_metadata = get_instanciated_metadata()
-    podnet_a_enable = instanciated_metadata['config.json'].get('podnet_a_enable', 123)
+    podnet_a_enabled = instanciated_metadata['config.json'].get('podnet_a_enabled', 123)
 
-    if type(podnet_a_enable) is bool:                               # Test pass
+    if type(podnet_a_enabled) is bool:                               # Test pass
         pass_map += test_map_bit
         result[test_id] = f'{pass_message}'
     else:
@@ -926,14 +926,14 @@ def inst_conf_aenb(test_id):
     return
 
 
-# 3.2.6 Validation of `podnet_b_enable` from Instantiated Metadata config.json
+# 3.2.6 Validation of `podnet_b_enabled` from Instantiated Metadata config.json
 def inst_conf_bena(test_id):
     result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
 
-    pass_message   = '3.2.6 Instanciated config.json `podnet_b_enable` - Pass - is False'
-    warn_message   = '3.2.6 Instanciated config.json `podnet_b_enable` - Warn - is True'
-    fail_message   = '3.2.6 Instanciated config.json `podnet_b_enable` - Fail - is True'
-    ignore_message = '3.2.6 Instanciated config.json `podnet_b_enable` - Ignore'
+    pass_message   = '3.2.6 Instanciated config.json `podnet_b_enabled` - Pass - is False'
+    warn_message   = '3.2.6 Instanciated config.json `podnet_b_enabled` - Warn - is True'
+    fail_message   = '3.2.6 Instanciated config.json `podnet_b_enabled` - Fail - is True'
+    ignore_message = '3.2.6 Instanciated config.json `podnet_b_enabled` - Ignore'
 
     test_map_bit = 2 ** test_id
 
@@ -944,9 +944,9 @@ def inst_conf_bena(test_id):
         return
 
     instanciated_metadata = get_instanciated_metadata()
-    podnet_b_enable = instanciated_metadata['config.json'].get('podnet_b_enable', True)
+    podnet_b_enabled = instanciated_metadata['config.json'].get('podnet_b_enabled', True)
 
-    if podnet_b_enable is False:                                    # Test pass
+    if podnet_b_enabled is False:                                    # Test pass
         pass_map += test_map_bit
         result[test_id] = f'{pass_message}'
     else:
@@ -960,14 +960,14 @@ def inst_conf_bena(test_id):
     return
 
 
-# 3.2.7 Validation of `podnet_b_enable` from Instantiated Metadata config.json
+# 3.2.7 Validation of `podnet_b_enabled` from Instantiated Metadata config.json
 def inst_conf_benb(test_id):
     result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
 
-    pass_message   = '3.2.7 Instanciated config.json `podnet_b_enable` - Pass - Boolean'
-    warn_message   = '3.2.7 Instanciated config.json `podnet_b_enable` - Warn - not Boolean'
-    fail_message   = '3.2.7 Instanciated config.json `podnet_b_enable` - Fail - not Boolean'
-    ignore_message = '3.2.7 Instanciated config.json `podnet_b_enable` - Ignore'
+    pass_message   = '3.2.7 Instanciated config.json `podnet_b_enabled` - Pass - Boolean'
+    warn_message   = '3.2.7 Instanciated config.json `podnet_b_enabled` - Warn - not Boolean'
+    fail_message   = '3.2.7 Instanciated config.json `podnet_b_enabled` - Fail - not Boolean'
+    ignore_message = '3.2.7 Instanciated config.json `podnet_b_enabled` - Ignore'
 
     test_map_bit = 2 ** test_id
 
@@ -978,9 +978,9 @@ def inst_conf_benb(test_id):
         return
 
     instanciated_metadata = get_instanciated_metadata()
-    podnet_b_enable = instanciated_metadata['config.json'].get('podnet_b_enable', 123)
+    podnet_b_enabled = instanciated_metadata['config.json'].get('podnet_b_enabled', 123)
 
-    if type(podnet_b_enable) is bool:                               # Test pass
+    if type(podnet_b_enabled) is bool:                               # Test pass
         pass_map += test_map_bit
         result[test_id] = f'{pass_message}'
     else:
@@ -994,14 +994,14 @@ def inst_conf_benb(test_id):
     return
 
 
-# 3.2.8 Validation of `podnet_a_enable` and `podnet_b_enable` from Instantiated Metadata config.json
+# 3.2.8 Validation of `podnet_a_enabled` and `podnet_b_enabled` from Instantiated Metadata config.json
 def inst_conf_aben(test_id):
     result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
 
-    pass_message   = '3.2.8 Instanciated config.json `podnet_a_enable` and `podnet_b_enable` - Pass - both are not True'
-    warn_message   = '3.2.8 Instanciated config.json `podnet_a_enable` and `podnet_b_enable` - Warn - both are True'
-    fail_message   = '3.2.8 Instanciated config.json `podnet_a_enable` and `podnet_b_enable` - Fail - both are True'
-    ignore_message = '3.2.8 Instanciated config.json `podnet_a_enable` and `podnet_b_enable` - Ignore'
+    pass_message   = '3.2.8 Instanciated config.json `podnet_a_enabled` and `podnet_b_enabled` - Pass - both are not True'
+    warn_message   = '3.2.8 Instanciated config.json `podnet_a_enabled` and `podnet_b_enabled` - Warn - both are True'
+    fail_message   = '3.2.8 Instanciated config.json `podnet_a_enabled` and `podnet_b_enabled` - Fail - both are True'
+    ignore_message = '3.2.8 Instanciated config.json `podnet_a_enabled` and `podnet_b_enabled` - Ignore'
 
     test_map_bit = 2 ** test_id
 
@@ -1012,10 +1012,10 @@ def inst_conf_aben(test_id):
         return
 
     instanciated_metadata = get_instanciated_metadata()
-    podnet_a_enable = instanciated_metadata['config.json'].get('podnet_a_enable', True)
-    podnet_b_enable = instanciated_metadata['config.json'].get('podnet_b_enable', True)
+    podnet_a_enabled = instanciated_metadata['config.json'].get('podnet_a_enabled', True)
+    podnet_b_enabled = instanciated_metadata['config.json'].get('podnet_b_enabled', True)
 
-    if podnet_a_enable is True and podnet_b_enable is True:
+    if podnet_a_enabled is True and podnet_b_enabled is True:
         if test_map_bit & fail:                                     # Test fail
             fail_map += test_map_bit
             result[test_id] = f'{fail_message}'
@@ -1187,7 +1187,7 @@ def inst_conf_dnss(test_id):
     valid_ips = True
     for dns_ip in dns_ips:
         try:
-            ipaddress.ip_address(dns_ip)
+            ipaddress.ip_address(dns_ip.strip())
         except ValueError:
             valid_ips = False
 
