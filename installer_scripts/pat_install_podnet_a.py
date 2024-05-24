@@ -7,7 +7,7 @@ import subprocess
 # lib
 import curses
 # local
-import primitives
+from primitives import firewall_podnet, net
 
 
 SYS_NET_DIR = '/sys/class/net/'
@@ -124,7 +124,7 @@ def build(win, config_data, netplan_data):
 
     win.addstr(1, 1, '2.1.2 Configuring Mgmt interface:              ', curses.color_pair(2))
     win.refresh()
-    configured, error = primitives.net.build(
+    configured, error = net.build(
         host='localhost',
         identifier=mgmt_iflname,
         ips=[mgmt_ipv4, mgmt_ipv6_2],
@@ -170,7 +170,7 @@ def build(win, config_data, netplan_data):
     oob_ip = f'10.0.0.254/16'
     win.addstr(2, 1, '2.2.2 Configuring OOB interface:               ', curses.color_pair(2))
     win.refresh()
-    configured, error = primitives.net.build(
+    configured, error = net.build(
         host='localhost',
         identifier=oob_iflname,
         ips=[oob_ip],
@@ -214,7 +214,7 @@ def build(win, config_data, netplan_data):
     # 2.3.2 Configure Private interface
     win.addstr(3, 1, '2.3.2 Configuring Private interface:           ', curses.color_pair(2))
     win.refresh()
-    configured, error = primitives.net.build(
+    configured, error = net.build(
         host='localhost',
         identifier=private_iflname,
         ips=None,
@@ -258,7 +258,7 @@ def build(win, config_data, netplan_data):
     # 2.4.2 Configure Inter interface
     win.addstr(4, 1, '2.4.2 Configuring Inter interface:             ', curses.color_pair(2))
     win.refresh()
-    configured, error = primitives.net.build(
+    configured, error = net.build(
         host='localhost',
         identifier=inter_iflname,
         ips=None,
@@ -338,7 +338,7 @@ def build(win, config_data, netplan_data):
     ]
     win.addstr(5, 1, '3.1 Configuring Firewall Rules:                ', curses.color_pair(2))
     win.refresh()
-    configured, error = primitives.firewall.build(
+    configured, error = firewall_podnet.build(
         firewall_rules=firewall_rules,
         log_setup=None,
     )
