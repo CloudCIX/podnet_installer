@@ -201,7 +201,7 @@ def build(win, config_data, netplan_data):
         while user_input != '\n':
             user_input = win.getkey()
 
-        private_iflname = scan_for_new_iface(excluded_ifaces)
+        private_iflname, private_mac = scan_for_new_iface(excluded_ifaces)
         if private_iflname != '':
             win.addstr(3, 1, '2.3.1 Connect Private interface:     CONNECTED ', curses.color_pair(4))
             win.addstr(11, 1, f'`private0`:{private_iflname} interface detected.              ', curses.color_pair(4))
