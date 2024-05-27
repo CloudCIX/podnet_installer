@@ -105,16 +105,14 @@ def check_to_process_blocklist(candidate_file_path, active_file_path):
     return process
 
 
-def direct_load_robosoc_nft(path, ipv4s, ipv6s):
+def direct_load_robosoc_nft(ipv4s, ipv6s):
     """
-    Generates /etc/cloudcix/robosoc/robosoc.nft from above defined template_robosoc template
+    Generates /etc/nftables.d/robosoc.conf from above defined template_robosoc template
     with all the ipv4 and ipv6 RoboSOC blocklist.
-    :param path: '/etc/cloudcix/robosoc/'
     :param ipv4s: 'list of ipv4 addresses'
     :param ipv6s: 'list of ipv6 addresses'
     :return: None
     """
-    nft_filename = 'robosoc.nft'
     # load the robosoc.j2 template and update with ipaddresses
     element_ipv4s = '{' + ', '.join(ipv4s) + '}'
     element_ipv6s = '{' + ', '.join(ipv6s) + '}'
@@ -123,7 +121,7 @@ def direct_load_robosoc_nft(path, ipv4s, ipv6s):
         'element_ipv6s': element_ipv6s,
     })
     # write to the robosoc.nft file
-    with open(f'{path}{nft_filename}', 'w') as file:
+    with open(f'/etc/nftables.d/robosoc.conf', 'w') as file:
         file.write(robosoc_template)
 
     # Restart the nftables
@@ -261,7 +259,7 @@ def process_robosoc_ipblocklist():
         # supply the file and get the ipv4s and ipv6s
         all_ipv4s, all_ipv6s = read_ipblocklist(f'{path}candidate_{filename}.txt')
         # load directly into robosoc.nft file via robosoc.j2
-        direct_load_robosoc_nft(path, all_ipv4s, all_ipv6s)
+        direct_load_robosoc_nft(all_ipv4s, all_ipv6s)
 
     # Not the First time, then unload removed and load the added only
     else:
