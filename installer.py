@@ -1,17 +1,34 @@
 #!/etc/cloudcix/pod/pod_installer/.venv/bin/python3
 # stdlib
 import curses
-import importlib
 import os
 # libs
 # local
-from data_blob import data_blob
+import data_blob
+from installer_scripts import (
+    cop_install_appliance_a,
+    cop_install_podnet_a,
+    cop_install_podnet_b,
+    cop_reinstall_podnet_a,
+    copregion_install_appliance_a,
+    copregion_install_podnet_a,
+    copregion_install_podnet_b,
+    copregion_reinstall_podnet_a,
+    pat_install_appliance_a,
+    pat_install_podnet_a,
+    pat_install_podnet_b,
+    pat_reinstall_podnet_a,
+    region_install_appliance_a,
+    region_install_podnet_a,
+    region_install_podnet_b,
+    region_reinstall_podnet_a,
+)
 from logo import logo
-from sql_utils import get_instanciated_infra, get_instanciated_metadata
 
 
 class ScreenTooSmallError(Exception):
     """Raise when the screen is too small to display information properly """
+
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -174,7 +191,7 @@ def main_menu(stdscr):
     stdscr.refresh()
 
 
-def build(win, subitem, stdscr, colmid, banner):
+def build(win, subitem, stdscr, colmid):
     if subitem == 0:
         # Test Results
         if fail_map == 0:
@@ -209,14 +226,44 @@ def build(win, subitem, stdscr, colmid, banner):
         stdscr.refresh()
         # Configure Pod
         if fail_map == 0:
-            win.addstr(3, 1, 'Configure Pod')
+            win.addstr(1, 1, 'Configure Pod')
             win.refresh()
             win.getch()
-            # call the host_status specific installer script
-            installer_script = importlib.import_module(f'installer_scripts.{host_status_text}')
-            config_data = get_instanciated_metadata()['config.json']
-            netplan_data = get_instanciated_infra()['netplan']
-            installer_script.build(win, config_data, netplan_data)
+
+            if host_status == data_blob.cop_install_podnet_a:
+                cop_install_podnet_a.build(win)
+            elif host_status == data_blob.cop_install_podnet_b:
+                cop_install_podnet_b.build(win)
+            elif host_status == data_blob.cop_install_appliance_a:
+                cop_install_appliance_a.build(win)
+            elif host_status == data_blob.cop_reinstall_podnet_a:
+                cop_reinstall_podnet_a.build(win)
+            elif host_status == data_blob.region_install_podnet_a:
+                region_install_podnet_a.build(win)
+            elif host_status == data_blob.region_install_podnet_b:
+                region_install_podnet_b.build(win)
+            elif host_status == data_blob.region_install_appliance_a:
+                region_install_appliance_a.build(win)
+            elif host_status == data_blob.region_reinstall_podnet_a:
+                region_reinstall_podnet_a.build(win)
+            elif host_status == data_blob.copregion_install_podnet_a:
+                copregion_install_podnet_a.build(win)
+            elif host_status == data_blob.copregion_install_podnet_b:
+                copregion_install_podnet_b.build(win)
+            elif host_status == data_blob.copregion_install_appliance_a:
+                copregion_install_appliance_a.build(win)
+            elif host_status == data_blob.copregion_reinstall_podnet_a:
+                copregion_reinstall_podnet_a.build(win)
+            elif host_status == data_blob.pat_install_podnet_a:
+                pat_install_podnet_a.build(win)
+            elif host_status == data_blob.pat_install_podnet_b:
+                pat_install_podnet_b.build(win)
+            elif host_status == data_blob.pat_install_appliance_a:
+                pat_install_appliance_a.build(win)
+            elif host_status == data_blob.pat_reinstall_podnet_a:
+                pat_reinstall_podnet_a.build(win)
+            else:
+                win.addstr(3, 1, f'Invalid Host status: {host_status}, cannot configure Pod', curses.color_pair(3))
         else:
             win.addstr(3, 1, 'One or more Tests have failed, cannot configure Pod', curses.color_pair(3))
         win.refresh()
@@ -262,7 +309,7 @@ def edit_window(stdscr):
             win = curses.newwin(20, 84, 8, colmid - 42)
             win.keypad(True)
             # Validate and Build is always a last Tab
-            if build(win, subitem, stdscr, colmid, banner):
+            if build(win, subitem, stdscr, colmid):
                 main(stdscr)
 
         banner(True, 'header')
@@ -286,7 +333,7 @@ def main(stdscr):
 
     global tab_item, subitem, host_status, host_status_text, pass_map, warn_map, fail_map, test_result
 
-    host_status, host_status_text, pass_map, warn_map, fail_map, test_result = data_blob()
+    host_status, host_status_text, pass_map, warn_map, fail_map, test_result = data_blob.data_blob()
     tab_item = 0
     subitem = 0
 
