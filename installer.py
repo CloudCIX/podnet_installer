@@ -230,7 +230,6 @@ def build(win, subitem, stdscr, colmid):
             win.refresh()
             win.getch()
 
-            built = False
             if host_status == data_blob.cop_install_podnet_a:
                 built = cop_install_podnet_a.build(win)
             elif host_status == data_blob.cop_install_podnet_b:
@@ -264,7 +263,8 @@ def build(win, subitem, stdscr, colmid):
             elif host_status == data_blob.pat_reinstall_podnet_a:
                 built = pat_reinstall_podnet_a.build(win)
             else:
-                win.addstr(3, 1, f'Invalid Host status: {host_status}, cannot configure Pod', curses.color_pair(3))
+                built = False
+                win.addstr(3, 1, f'Host {host_status}, is already in a configured state.', curses.color_pair(4))
 
             if built is True:
                 win.clear()
