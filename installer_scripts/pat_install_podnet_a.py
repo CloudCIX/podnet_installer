@@ -264,7 +264,7 @@ def build(win):
 
     # Robot IPs
     pod_appliance = f'{ipv6_subnet_items[0]}6000:1'
-    robot_ipv6 = f'{ipv6_subnet_items[0][:-1]}d0c6::6001:a'
+    robot_ipv6 = f'{ipv6_subnet_items[0][:-1]}d0c6::6001:1'
     robotworker_ipv6 = f'{ipv6_subnet_items[0][:-1]}d0c6::6001:2'
 
     # COP IPs
