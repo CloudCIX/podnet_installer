@@ -261,6 +261,13 @@ def build(win):
     # 3.1 Prepare Firewall rules
     win.addstr(2, 1, '3.1 Preparing Firewall Rules:                   ', curses.color_pair(2))
     win.refresh()
+
+    # Robot IPs
+    pod_appliance = f'{ipv6_subnet_items[0]}6000:1'
+    robot_ipv6 = f'{ipv6_subnet_items[0][:-1]}d0c6::6001:a'
+    robotworker_ipv6 = f'{ipv6_subnet_items[0][:-1]}d0c6::6001:2'
+
+    # COP IPs
     cop_nginxcop_ipv4 = f'{ipaddress.ip_address(primary_ipv4_subnet_items[0]) + 4}'
     cop_portal_ipv4 = f'{ipaddress.ip_address(primary_ipv4_subnet_items[0]) + 5}'
     cop_nginxcop_ipv6 = f'{ipv6_subnet_items[0][:-1]}d0c6::4004:a'
@@ -282,7 +289,7 @@ def build(win):
         # 3.1.2.2 DNS
         {'order': 3122, 'version': '6', 'iiface': 'public0', 'oiface': '', 'protocol': 'dns', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': ['any'], 'port': []},
         # 3.1.2.3 SSH to Mgmt Interface by Robot
-        {'order': 3123, 'version': '6', 'iiface': 'mgmt0', 'oiface': '', 'protocol': 'tcp', 'action': 'accept','log': True, 'source': [mgmt_ipv6_1, mgmt_ipv6_2, mgmt_ipv6_3], 'destination': ['any'], 'port': ['22']},
+        {'order': 3123, 'version': '6', 'iiface': 'mgmt0', 'oiface': '', 'protocol': 'tcp', 'action': 'accept','log': True, 'source': [robot_ipv6, robotworker_ipv6, pod_appliance], 'destination': [mgmt_ipv6_1, mgmt_ipv6_2, mgmt_ipv6_3], 'port': ['22']},
 
         # 3.1.3 Forward IPv4
         # 3.1.3.1 DNS TCP/UDP port 53 From Public to Mgmt
