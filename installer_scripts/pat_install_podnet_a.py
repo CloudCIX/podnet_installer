@@ -230,7 +230,7 @@ def build(win):
     instanciated_infra = get_instanciated_infra()
     ethernets = instanciated_infra['netplan']['network']['ethernets']
     for interface_lname, interface_data in ethernets.items():
-        if interface_data.get('set_name', '') == 'public0':
+        if interface_data.get('set-name', '') == 'public0':
             public_iflname = interface_lname
             break
 
