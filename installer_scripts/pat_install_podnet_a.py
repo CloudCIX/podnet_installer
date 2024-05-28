@@ -86,7 +86,7 @@ def build(win):
         win.addstr(2, 1, '1.1 Management:FAILED', curses.color_pair(3))
         win.addstr(18, 1, f'Error: {error}                                              ', curses.color_pair(3))
         win.refresh()
-        return
+        return False
     win.addstr(2, 1, '1.1 Management:CONFIGURED', curses.color_pair(4))
     win.refresh()
     excluded_ifaces.append('mgmt0')
@@ -129,7 +129,7 @@ def build(win):
         win.addstr(3, 1, '1.2 OOB       :FAILED', curses.color_pair(3))
         win.addstr(18, 1, f'Error: {error}                                              ', curses.color_pair(3))
         win.refresh()
-        return
+        return False
     win.addstr(3, 1, '1.2 OOB       :CONFIGURED', curses.color_pair(4))
     win.refresh()
     excluded_ifaces.append('oob0')
@@ -170,7 +170,7 @@ def build(win):
         win.addstr(4, 1, '1.3 Private   :FAILED', curses.color_pair(3))
         win.addstr(18, 1, f'Error: {error}                                              ', curses.color_pair(3))
         win.refresh()
-        return
+        return False
     win.addstr(4, 1, '1.3 Private   :CONFIGURED', curses.color_pair(4))
     win.refresh()
     excluded_ifaces.append('private0')
@@ -211,7 +211,7 @@ def build(win):
         win.addstr(5, 1, '1.4 Inter     :FAILED', curses.color_pair(3))
         win.addstr(18, 1, f'Error: {error}                                              ', curses.color_pair(3))
         win.refresh()
-        return
+        return False
     win.addstr(5, 1, '1.4 Inter     :CONFIGURED', curses.color_pair(4))
 
     win.addstr(18, 1, f'Please press ENTER to continue Update Config json block.    ', curses.color_pair(2))
@@ -341,7 +341,7 @@ def build(win):
         win.addstr(3, 1, '3.2 Configuring Firewall Rules:           FAILED', curses.color_pair(3))
         win.addstr(18, 1, f'Error: {error}', curses.color_pair(3))
         win.refresh()
-        return
+        return False
     win.addstr(3, 1, '3.2 Configuring Firewall Rules:          SUCCESS', curses.color_pair(4))
 
     win.addstr(18, 1, f'Please press ENTER to continue RoboSOC setup block.         ', curses.color_pair(2))
@@ -363,7 +363,7 @@ def build(win):
         win.addstr(2, 1, '4.1 RoboSOC Script and Cron job setup:    FAILED', curses.color_pair(3))
         win.addstr(18, 1, f'Error: {error}', curses.color_pair(3))
         win.refresh()
-        return
+        return False
 
     # 4.1.2 Robosoc Cron job
     with open('/etc/cron.d/robosoc', 'w') as file:
@@ -379,4 +379,4 @@ def build(win):
     win.refresh()
 
     # Finish
-    return
+    return True
