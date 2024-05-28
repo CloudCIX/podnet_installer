@@ -242,10 +242,10 @@ def build(win):
         'podnet_a_private_ifname': private_iflname,
         'podnet_a_inter_ifname': inter_iflname,
     }
-    with open('/etc/cloudcix/pod/pod_installer/configs/config.json', 'r') as file:
+    with open('/etc/cloudcix/pod/configs/config.json', 'r') as file:
         config_json = json.load(file)
     updated_config = {key: logical_ifnames.get(key, val) for key, val in config_json.items()}
-    with open('/etc/cloudcix/pod/pod_installer/configs/config.json', 'w') as file:
+    with open('/etc/cloudcix/pod/configs/config.json', 'w') as file:
         json.dump(updated_config, file, indent=4)
     win.addstr(1, 1, '2. Update Config json:                   SUCCESS', curses.color_pair(2))
 
