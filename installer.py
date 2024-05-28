@@ -231,39 +231,49 @@ def build(win, subitem, stdscr, colmid):
             win.getch()
 
             if host_status == data_blob.cop_install_podnet_a:
-                cop_install_podnet_a.build(win)
+                built = cop_install_podnet_a.build(win)
             elif host_status == data_blob.cop_install_podnet_b:
-                cop_install_podnet_b.build(win)
+                built = cop_install_podnet_b.build(win)
             elif host_status == data_blob.cop_install_appliance_a:
-                cop_install_appliance_a.build(win)
+                built = cop_install_appliance_a.build(win)
             elif host_status == data_blob.cop_reinstall_podnet_a:
-                cop_reinstall_podnet_a.build(win)
+                built = cop_reinstall_podnet_a.build(win)
             elif host_status == data_blob.region_install_podnet_a:
-                region_install_podnet_a.build(win)
+                built = region_install_podnet_a.build(win)
             elif host_status == data_blob.region_install_podnet_b:
-                region_install_podnet_b.build(win)
+                built = region_install_podnet_b.build(win)
             elif host_status == data_blob.region_install_appliance_a:
-                region_install_appliance_a.build(win)
+                built = region_install_appliance_a.build(win)
             elif host_status == data_blob.region_reinstall_podnet_a:
-                region_reinstall_podnet_a.build(win)
+                built = region_reinstall_podnet_a.build(win)
             elif host_status == data_blob.copregion_install_podnet_a:
                 copregion_install_podnet_a.build(win)
             elif host_status == data_blob.copregion_install_podnet_b:
-                copregion_install_podnet_b.build(win)
+                built = copregion_install_podnet_b.build(win)
             elif host_status == data_blob.copregion_install_appliance_a:
-                copregion_install_appliance_a.build(win)
+                built = copregion_install_appliance_a.build(win)
             elif host_status == data_blob.copregion_reinstall_podnet_a:
-                copregion_reinstall_podnet_a.build(win)
+                built = copregion_reinstall_podnet_a.build(win)
             elif host_status == data_blob.pat_install_podnet_a:
-                pat_install_podnet_a.build(win)
+                built = pat_install_podnet_a.build(win)
             elif host_status == data_blob.pat_install_podnet_b:
-                pat_install_podnet_b.build(win)
+                built = pat_install_podnet_b.build(win)
             elif host_status == data_blob.pat_install_appliance_a:
-                pat_install_appliance_a.build(win)
+                built = pat_install_appliance_a.build(win)
             elif host_status == data_blob.pat_reinstall_podnet_a:
-                pat_reinstall_podnet_a.build(win)
+                built = pat_reinstall_podnet_a.build(win)
             else:
-                win.addstr(3, 1, f'Invalid Host status: {host_status}, cannot configure Pod', curses.color_pair(3))
+                built = False
+                win.addstr(3, 1, f'Host {host_status}, is already in a configured state.', curses.color_pair(4))
+
+            if built is True:
+                win.clear()
+                win.addstr(3, 1, f'Successfully Built the Host: {host_status_text}, Press ENTER to go to Summary Tab.')
+                win.refresh()
+                user_input = win.getkey()
+                while user_input != '\n':
+                    user_input = win.getkey()
+                return True
         else:
             win.addstr(3, 1, 'One or more Tests have failed, cannot configure Pod', curses.color_pair(3))
         win.refresh()
@@ -309,8 +319,8 @@ def edit_window(stdscr):
             win = curses.newwin(20, 84, 8, colmid - 42)
             win.keypad(True)
             # Validate and Build is always a last Tab
-            if build(win, subitem, stdscr, colmid):
-                main(stdscr)
+            if build(win, subitem, stdscr, colmid) is True:
+                main(stdscr, False)
 
         banner(True, 'header')
         banner(False, 'footer')
@@ -320,7 +330,7 @@ def edit_window(stdscr):
         banner(False, 'navigate')
 
 
-def main(stdscr):
+def main(stdscr, firsttime=True):
 
     # Make sure the screen is big enough
     if (rows < 35) or (cols < 90):
@@ -329,7 +339,8 @@ def main(stdscr):
     # Clear keyboard inputs that may have been entered by user during delay screen.
     curses.flushinp()
 
-    copyright()
+    if firsttime is True:
+        copyright()
 
     global tab_item, subitem, host_status, host_status_text, pass_map, warn_map, fail_map, test_result
 
