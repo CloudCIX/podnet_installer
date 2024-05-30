@@ -65,10 +65,8 @@ def build(win):
 
     # 1.1.2 Configure Mgmt interface
     # sort ipaddresses
-    primary_ipv4_subnet = ipaddress.ip_network(config_data['primary_ipv4_subnet'], strict=False)
-    primary_ipv4_subnet_hosts = list(primary_ipv4_subnet.hosts())
-    subnet_mask = primary_ipv4_subnet.prefixlen
-    mgmt_ipv4_a = f'{primary_ipv4_subnet_hosts[1]}'
+    primary_ipv4_subnet_items = config_data['primary_ipv4_subnet'].split('/')
+    mgmt_ipv4_a = f'{next(ipaddress.IPv4Network(config_data["primary_ipv4_subnet"]).hosts())}'
 
     ipv6_subnet_items = config_data['ipv6_subnet'].split('/')
     mgmt_ipv6_a = f'{ipv6_subnet_items[0]}10:0:2'
@@ -79,7 +77,7 @@ def build(win):
     configured, error = net.build(
         host='localhost',
         identifier=mgmt_iflname,
-        ips=[f'{mgmt_ipv4_a}/{subnet_mask}', f'{mgmt_ipv6_a}/64'],
+        ips=[f'{mgmt_ipv4_a}/{primary_ipv4_subnet_items[1]}', f'{mgmt_ipv6_a}/64'],
         mac=mgmt_mac,
         name='mgmt0',
         routes=[{'to': mgmt_route_to, 'via': mgmt_route_via}],
@@ -270,8 +268,8 @@ def build(win):
     robotworker_ipv6 = f'{ipv6_subnet_items[0][:-1]}d0c6::6001:2'
 
     # COP IPs
-    cop_nginxcop_ipv4 = f'{ipaddress.ip_address(primary_ipv4_subnet_hosts[0]) + 4}'
-    cop_portal_ipv4 = f'{ipaddress.ip_address(primary_ipv4_subnet_hosts[0]) + 5}'
+    cop_nginxcop_ipv4 = f'{ipaddress.ip_address(primary_ipv4_subnet_items[0]) + 4}'
+    cop_portal_ipv4 = f'{ipaddress.ip_address(primary_ipv4_subnet_items[0]) + 5}'
     cop_nginxcop_ipv6 = f'{ipv6_subnet_items[0][:-1]}d0c6::4004:a'
     cop_portal_ipv6 = f'{ipv6_subnet_items[0][:-1]}d0c6::5002:4'
     firewall_rules = [
