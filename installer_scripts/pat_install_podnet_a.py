@@ -274,62 +274,62 @@ def build(win):
     cop_portal_ipv6 = f'{ipv6_subnet_items[0][:-1]}d0c6::5002:4'
     firewall_rules = [
         # 3.1.1 Inbound IPv4
-        # 3.1.1.1 "lo" all accept
+        # "lo" all accept
         {'order': 3111, 'version': '4', 'iiface': 'lo', 'oiface': '', 'protocol': 'any', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': ['127.0.0.0/24'], 'port': []},
-        # 3.1.1.2 Ping Accept
+        # Ping Accept
         {'order': 3112, 'version': '4', 'iiface': 'any', 'oiface': '', 'protocol': 'icmp', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': ['any'], 'port': []},
-        # 3.1.1.3 DNS Accept
+        # DNS Accept
         {'order': 3113, 'version': '4', 'iiface': 'any', 'oiface': '', 'protocol': 'dns', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': ['any'], 'port': []},
-        # 3.1.1.4 SSH to OOB Interface by PAT
+        # SSH to OOB Interface by PAT
         {'order': 3114, 'version': '4', 'iiface': 'oob0', 'oiface': '', 'protocol': 'tcp', 'action': 'accept', 'log': True, 'source': ['192.168.2.0/23'], 'destination': ['any'], 'port': ['22']},
-        # 3.1.1.5 VPN on Public interface since it has Region in blend
+        # VPN on Public interface since it has Region in blend
         {'order': 3115, 'version': '4', 'iiface': 'public0', 'oiface': '', 'protocol': 'vpn', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
 
         # 3.1.2 Inbound IPv6
-        # 3.1.2.1 "lo" accept
+        # "lo" accept
         {'order': 3121, 'version': '6', 'iiface': 'lo', 'oiface': '', 'protocol': 'any', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': ['::1/128'], 'port': []},
-        # 3.1.2.2 Ping Accept
+        # Ping Accept
         {'order': 3122, 'version': '6', 'iiface': 'any', 'oiface': '', 'protocol': 'icmp', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': ['any'], 'port': []},
-        # 3.1.2.3 DNS Accept
+        # DNS Accept
         {'order': 3123, 'version': '6', 'iiface': 'any', 'oiface': '', 'protocol': 'dns', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': ['any'], 'port': []},
-        # 3.1.2.4 SSH to Mgmt Interface by Robot
+        # SSH to Mgmt Interface by Robot
         {'order': 3124, 'version': '6', 'iiface': 'mgmt0', 'oiface': '', 'protocol': 'tcp', 'action': 'accept','log': True, 'source': [robot_ipv6, robotworker_ipv6, pod_appliance], 'destination': [mgmt_ipv6_a, mgmt_ipv6_b], 'port': ['22']},
 
         # 3.1.3 Forward IPv4
-        # 3.1.3.1 DNS Accept From Any to Any Interface
+        # DNS Accept From Any to Any Interface
         {'order': 3131, 'version': '4', 'iiface': 'public0', 'oiface': 'mgmt0', 'protocol': 'dns', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': ['any'], 'port': []},
-        # 3.1.3.2 Mgmt Outbound Accept
+        # Mgmt Outbound Accept
         {'order': 3132, 'version': '4', 'iiface': 'mgmt0', 'oiface': 'public0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
-        # 3.1.3.3 Private Outbound Accept
+        # Private Outbound Accept
         {'order': 3133, 'version': '4', 'iiface': 'private0', 'oiface': 'public0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
-        # 3.1.3.4 VPN Public to Private since it has Region in blend
+        # VPN Public to Private since it has Region in blend
         {'order': 3134, 'version': '4', 'iiface': 'public0', 'oiface': 'private0', 'protocol': 'vpn', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
 
         # 3.1.4 Forward IPv6
-        # 3.1.4.1 DNS Accept From Any to Any Interface
+        # DNS Accept From Any to Any Interface
         {'order': 3141, 'version': '6', 'iiface': 'any', 'oiface': 'any', 'protocol': 'dns', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': ['any'], 'port': []},
-        # 3.1.4.2 Mgmt Outbound Accept
+        # Mgmt Outbound Accept
         {'order': 3142, 'version': '6', 'iiface': 'mgmt0', 'oiface': 'public0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
-        # 3.1.4.3 Private Outbound Accept
+        # Private Outbound Accept
         {'order': 3143, 'version': '6', 'iiface': 'private0', 'oiface': 'public0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
 
         # 3.1.5 Mgmt Specific Forward IPv4
-        # 3.1.5.1 Ping Accept
+        # Ping Accept
         {'order': 3151, 'version': '4', 'iiface': 'public0', 'oiface': 'mgmt0', 'protocol': 'icmp', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': ['any'], 'port': []},
-        # 3.1.5.2 COP nginx and portal 443 Accept
+        # COP nginx and portal 443 Accept
         {'order': 3152, 'version': '4', 'iiface': 'public0', 'oiface': 'mgmt0', 'protocol': 'tcp', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': [cop_nginxcop_ipv4, cop_portal_ipv4], 'port': ['443']},
 
         # 3.1.6 Mgmt Specific Forward IPv6
-        # 3.1.6.1 Ping Accept
+        # Ping Accept
         {'order': 3161, 'version': '6', 'iiface': 'public0', 'oiface': 'mgmt0', 'protocol': 'icmp', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': ['any'], 'port': []},
-        # 3.1.6.2 COP nginx and portal 443 Accept
+        # COP nginx and portal 443 Accept
         {'order': 3162, 'version': '6', 'iiface': 'public0', 'oiface': 'mgmt0', 'protocol': 'tcp', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': [cop_nginxcop_ipv6, cop_portal_ipv6], 'port': ['443']},
 
         # 3.1.7 Outbound IPv4 (by default all outbound traffic is accepted), all block rules would go here
-        # 3.1.7.1 Allow all
+        # Allow all
         {'order': 3171, 'version': '4', 'iiface': '', 'oiface': 'any', 'protocol': 'any', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': ['any'], 'port': []},
         # 3.1.8 Outbound IPv6 (by default all outbound traffic is accepted), all block rules would go here
-        # 3.1.8.1 Allow all
+        # Allow all
         {'order': 3181, 'version': '6', 'iiface': '', 'oiface': 'any', 'protocol': 'any', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': ['any'], 'port': []},
 
     ]
