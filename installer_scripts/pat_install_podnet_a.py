@@ -460,5 +460,8 @@ def build(win):
     win.addstr(2, 1, '4.1 RoboSOC Script and Cron job setup:   SUCCESS', curses.color_pair(2))
     win.refresh()
 
+    # 5 Docker setup
+    # Not Applicable for PodNet A
+
     # Finish
     return True
