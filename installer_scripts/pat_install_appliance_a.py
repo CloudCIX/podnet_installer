@@ -3,7 +3,7 @@
 import subprocess
 # libs
 import curses
-from cloudcix.rcc import deploy_lsh, CouldNotExecuteException
+from cloudcix.rcc import deploy_ssh, CouldNotExecuteException
 from crontab import CronTab
 # local
 from sql_utils import get_instanciated_metadata
@@ -16,7 +16,7 @@ def disable_robot_password_ssh(podnet_ip):
 
     # Deploy the bash script to the Host
     try:
-        stdout, stderr = deploy_lsh(
+        stdout, stderr = deploy_ssh(
             host_ip=podnet_ip,
             payload=command,
             username='robot',
