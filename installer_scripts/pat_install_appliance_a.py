@@ -11,23 +11,31 @@ from sql_utils import get_instanciated_metadata
 
 def disable_robot_password_ssh(podnet_ip):
     # move the robot.conf from /etc/cloudcix/pod/templates/robot.conf to /etc/ssh/sshd_config.d/robot.conf
-    command = 'sudo cp /etc/cloudcix/pod/templates/robot.conf /etc/ssh/sshd_config.d/robot.conf 2>&1 && '
-    command += 'sudo systemctl restart sshd > /dev/null 2>&1'
-
+    payload = """if ! sudo cp /etc/cloudcix/pod/templates/robot.conf /etc/ssh/sshd_config.d/robot.conf 2>&1; then
+    echo "300: Failed to Copy robot.conf to /etc/ssh/sshd_config.d"
+    exit(1)
+fi 
+if ! sudo systemctl restart sshd > /dev/null 2>&1; then
+    echo "301: Failed to restart sshd service"
+    exit(1)
+fi
+echo "000: Successfuly copied robot.conf to /etc/ssh/sshd_config.d and restarted sshd service" 
+    """
     # Deploy the bash script to the Host
     try:
         stdout, stderr = deploy_ssh(
             host_ip=podnet_ip,
-            payload=command,
+            payload=payload,
             username='robot',
         )
     except CouldNotExecuteException as e:
         return False, str(e)
 
-    if stderr:
-        return False, f'{stderr}'
     if stdout:
-        return True, f'{stdout}'
+        if '000' in stdout:
+            return True, f'{stdout}'
+
+    return False, f'{stderr}'
 
 
 def upload_ssh_key(podnet):
