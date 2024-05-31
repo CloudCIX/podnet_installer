@@ -45,9 +45,10 @@ Installer Tasks:
   - 4.2 setup cron job
   
 5 Docker Setup
-  - 5.1 Setting up NFS mount drive
-  - 5.2 Starting Docker container
-  - 5.3 Setup_user_expiration_cron(cop)
-  - 5.4 Setup_api_postgres_backup_cron(cop)
-  - 5.5 Robot ssh key publish to podnet A(region)
-  - 5.6 Robot ssh key publish to podnet B(region)
+  - 5.1 Starting Docker container
+  - 5.2 Setup_user_expiration_cron(cop)
+  - 5.3 Setup_api_postgres_backup_cron(cop)
+  - 5.4 Reset Robot password less access to PodNet A(region)
+  - 5.5 Reset Robot password less access to PodNet B(region)
+  - 5.6 Update the ipv4 default route to pms1
+  - 5.7 Update the ipv6 default route to :10:0:1
