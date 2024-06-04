@@ -188,10 +188,10 @@ def build(win):
             shell=True,
             check=True,
         )
-        win.addstr(4, 1, '5.3 Setting up NFS mount drive:          SUCCESS', curses.color_pair(3))
+        win.addstr(4, 1, '5.3 Starting Docker services:            SUCCESS', curses.color_pair(3))
         win.refresh()
     except subprocess.CalledProcessError as error:
-        win.addstr(4, 1, '5.3 Setting up NFS mount drive:           FAILED', curses.color_pair(3))
+        win.addstr(4, 1, '5.3 Starting Docker services:             FAILED', curses.color_pair(3))
         win.addstr(18, 1, f'Error: {error}', curses.color_pair(3))
         win.refresh()
         return False

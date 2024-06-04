@@ -41,8 +41,7 @@ Installer Tasks:
     - 3.3.1 Call Primitive (call primitive)
 
 4 RoboSOC
-  - 4.1 set robosoc.py executable
-  - 4.2 Setup robosoc cron job
+  - 4.1 Setup robosoc cron job
   
 5 Docker Setup
   - 5.1 Download the docker-compose.yml file from GitHub
