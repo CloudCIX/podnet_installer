@@ -224,7 +224,7 @@ def build(win):
     win.clear()
 
     # 2 Update Config.json
-    win.addstr(1, 1, '2. Update Config json:                       ', curses.color_pair(2))
+    win.addstr(1, 1, '2. Update Config json:                          ', curses.color_pair(2))
     win.refresh()
     # 2.1 Update Interface names
     # 2.1.1 Find the logical interface name for Public Interface from netplan data
@@ -435,30 +435,23 @@ def build(win):
 
     # 4. RoboSOC
     win.addstr(1, 1, '4. RoboSOC Setup:                               ', curses.color_pair(2))
-    # 4.1 Robosoc script
-    win.addstr(2, 1, '4.1 RoboSOC Script and Cron job setup:          ', curses.color_pair(2))
+    # 4.1 Robosoc Cron job
+    win.addstr(2, 1, '4.1 RoboSOC Cron job setup:                     ', curses.color_pair(2))
     win.refresh()
-    # 4.1.1 set the /etc/cloudcix/pod/pod_installer/robosoc.py file to executable ie to +x
-    try:
-        subprocess.run(['sudo', 'chmod', '+x', '/etc/cloudcix/pod/pod_installer/robosoc.py'], check=True)
-    except subprocess.CalledProcessError as error:
-        win.addstr(2, 1, '4.1 RoboSOC Script and Cron job setup:    FAILED', curses.color_pair(3))
-        win.addstr(18, 1, f'Error: {error}', curses.color_pair(3))
-        win.refresh()
-        return False
-
-    # 4.1.2 Robosoc Cron job
     with open('/etc/cron.d/robosoc', 'w') as file:
         file.write('*/15 * * * * root /etc/cloudcix/pod/pod_installer/robosoc.py > /dev/null 2>&1 \n')
     # for cron job file, file must be executable so set to +x
     try:
         subprocess.run(['sudo', 'chmod', '+x', '/etc/cron.d/robosoc'], check=True)
     except subprocess.CalledProcessError as error:
-        win.addstr(2, 1, '4.1 RoboSOC Script and Cron job setup:    FAILED', curses.color_pair(3))
+        win.addstr(2, 1, '4.1 RoboSOC Cron job setup:               FAILED', curses.color_pair(3))
         win.addstr(18, 1, f'Error: {error}', curses.color_pair(3))
         win.refresh()
-    win.addstr(2, 1, '4.1 RoboSOC Script and Cron job setup:   SUCCESS', curses.color_pair(2))
+    win.addstr(2, 1, '4.1 RoboSOC Cron job setup:              SUCCESS', curses.color_pair(2))
     win.refresh()
+
+    # 5 Docker setup
+    # Not Applicable for PodNet A
 
     # Finish
     return True
