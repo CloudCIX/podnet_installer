@@ -6,28 +6,28 @@ Installer Tasks:
   - 1.1 Public Interface setup
     - 1.1.1 Connect the Public Interface 
     - 1.1.2 Scan for the Public Interface
-    - 1.1.3 Configure the Public Interface(call primitive)
+    - 1.1.3 Configure the Public Interface (call primitive)
   - 1.2 Management Interface setup
     - 1.2.1 Connect the Mgmt Interface 
     - 1.2.2 Scan for the Mgmt Interface
-    - 1.2.3 Configure the Mgmt Interface(call primitive)
+    - 1.2.3 Configure the Mgmt Interface (call primitive)
   - 1.3 OOB Interface setup
     - 1.3.1 Connect the OOB Interface 
     - 1.3.2 Scan for the OOB Interface
-    - 1.3.3 Configure the OOB Interface(call primitive)
+    - 1.3.3 Configure the OOB Interface (call primitive)
   - 1.4 Private Interface setup
     - 1.4.1 Connect the Private Interface 
     - 1.4.2 Scan for the Private Interface
-    - 1.4.3 Configure the Private Interface(call primitive)
+    - 1.4.3 Configure the Private Interface (call primitive)
   - 1.5 Inter Interface setup
     - 1.5.1 Connect the Inter Interface 
     - 1.5.2 Scan for the Inter Interface
-    - 1.5.3 Configure the Inter Interface(call primitive)
+    - 1.5.3 Configure the Inter Interface (call primitive)
 
 2 Update config.json
   - 2.1 Update Interface names
-    - 2.1.1 logical interface name for Public Interface
-    - 2.1.2 logical interface name for Management Interface
+    - 2.1.1 Find logical interface name for preconfigured default Interface of the host
+    - 2.1.2 Create dictionary for all interfaces on host
 
 3 Firewall 
   - 3.1 Prepare Firewall rules
@@ -38,29 +38,29 @@ Installer Tasks:
     - 3.1.5 Outbound Rules IPv4
     - 3.1.6 Outbound Rules IPv6           
   - 3.2 Configure Firewall rules
-    - 3.3.1 Call Primitive(call primitive)
+    - 3.3.1 Call Primitive (call primitive)
 
 4 RoboSOC
   - 4.1 set robosoc.py executable
-  - 4.2 setup cron job
+  - 4.2 Setup robosoc cron job
   
 5 Docker Setup
-  - 5.1 Download the docker-compose.yml file from github
-  - 5.2 Download the default.conf.template file from github(cop)
-  - 5.3 Starting Docker container
-  - 5.4 Setup_user_expiration_cron(cop)
-  - 5.5 Setup_api_postgres_backup_cron(cop)
-  - 5.6 Reset Robot password less access to PodNet A(region)
-  - 5.7 Reset Robot password less access to PodNet B(region)
-  - 5.8 Update the ipv4 default route to pms1
-  - 5.9 Update the ipv6 default route to :10:0:1
+  - 5.1 Download the docker-compose.yml file from GitHub
+  - 5.2 Download the default.conf.template file from GitHub (cop)
+  - 5.3 Starting Docker containers
+  - 5.4 Setup Cron job for User expiration notifications (cop)
+  - 5.5 Setup Cron job for backing up pgsqlapi database (cop)
+  - 5.6 Configure passwordless access for robot user to PodNet A (region)
+  - 5.7 Configure passwordless access for robot user to PodNet B (region)
+  - 5.8 Update the IPv4 default route to pms1
+  - 5.9 Update the IPv6 default route to :10:0:1
 
 6 - 7 Reserved
 
 
 8 Reset Routes
-  - 8.1 Reset the Management IPv4 default(0.0.0.0/0) route to pms1
-  - 8.2 Reset the Management IPv6 default(::/0) route to ::10:0:1
+  - 8.1 Configure the Management IPv4 default(0.0.0.0/0) route to pms1
+  - 8.2 Configure the Management IPv6 default(::/0) route to ::10:0:1
   
 9 Communicate back to PAT(Non-PAT Pods)
-  - 9.1 logical names of PodNet/Appliance Interfaces
+  - 9.1 Logical names of PodNet/Appliance Interfaces

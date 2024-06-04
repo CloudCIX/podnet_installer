@@ -174,7 +174,7 @@ def build(win):
         win.addstr(3, 1, '5.2 Dowloading the default.conf.template:SUCCESS', curses.color_pair(3))
         win.refresh()
     except subprocess.CalledProcessError as error:
-        win.addstr(3, 1, '5.3 Dowloading the default.conf.template: FAILED', curses.color_pair(3))
+        win.addstr(3, 1, '5.2 Dowloading the default.conf.template: FAILED', curses.color_pair(3))
         win.addstr(18, 1, f'Error: {error}', curses.color_pair(3))
         win.refresh()
         return False
