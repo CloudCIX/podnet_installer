@@ -228,7 +228,7 @@ def build(win):
     win.clear()
 
     # 2 Update Config.json
-    win.addstr(1, 1, '2. Update Config json:                       ', curses.color_pair(2))
+    win.addstr(1, 1, '2. Update Config json:                          ', curses.color_pair(2))
     win.refresh()
     # 2.1 Update Interface names
     # 2.1.1 Find the logical interface name for Public Interface from netplan data

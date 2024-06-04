@@ -45,10 +45,22 @@ Installer Tasks:
   - 4.2 setup cron job
   
 5 Docker Setup
-  - 5.1 Starting Docker container
-  - 5.2 Setup_user_expiration_cron(cop)
-  - 5.3 Setup_api_postgres_backup_cron(cop)
-  - 5.4 Reset Robot password less access to PodNet A(region)
-  - 5.5 Reset Robot password less access to PodNet B(region)
-  - 5.6 Update the ipv4 default route to pms1
-  - 5.7 Update the ipv6 default route to :10:0:1
+  - 5.1 Download the docker-compose.yml file from github
+  - 5.2 Download the default.conf.template file from github(cop)
+  - 5.3 Starting Docker container
+  - 5.4 Setup_user_expiration_cron(cop)
+  - 5.5 Setup_api_postgres_backup_cron(cop)
+  - 5.6 Reset Robot password less access to PodNet A(region)
+  - 5.7 Reset Robot password less access to PodNet B(region)
+  - 5.8 Update the ipv4 default route to pms1
+  - 5.9 Update the ipv6 default route to :10:0:1
+
+6 - 7 Reserved
+
+
+8 Reset Routes
+  - 8.1 Reset the Management IPv4 default(0.0.0.0/0) route to pms1
+  - 8.2 Reset the Management IPv6 default(::/0) route to ::10:0:1
+  
+9 Communicate back to PAT(Non-PAT Pods)
+  - 9.1 logical names of PodNet/Appliance Interfaces
