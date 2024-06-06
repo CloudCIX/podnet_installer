@@ -3,6 +3,7 @@ import ipaddress
 import os
 # lib
 import psutil
+from ping3 import ping
 # local
 from interface_utils import read_interface_file
 from sql_utils import (
@@ -1243,6 +1244,257 @@ def inst_conf_cmon(test_id):
             fail_map += test_map_bit
             result[test_id] = f'{fail_message}'
         elif test_map_bit & warn:                                 # Test warn
+            warn_map += test_map_bit
+            result[test_id] = f'{warn_message}'
+    update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+    return
+
+
+def is_host_reachable_verbose(host, count=4):
+    success = False
+    for i in range(count):
+        response = ping(host)
+        if response is not None:
+            success = True
+            break
+    return success
+
+
+# 6 Ping Tests
+# 6.1 IPv4 addresses
+# 6.1.1 Ping PE
+def ping_ipv4___pe(test_id):
+    result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
+
+    pass_message   = '6.1.1 Ping Test IPv4 PE - Pass - Success'
+    warn_message   = '6.1.1 Ping Test IPv4 PE - Warn - Failed'
+    fail_message   = '6.1.1 Ping Test IPv4 PE - Fail - Failed'
+    ignore_message = '6.1.1 Ping Test IPv4 PE - Ignore'
+
+    test_map_bit = 2 ** test_id
+
+    if test_map_bit & ignore:  # Test Ignore
+        ignore_map += test_map_bit
+        result[test_id] = ignore_message
+        update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+        return
+
+    instanciated_metadata = get_instanciated_metadata()
+    ipv4_link_subnet = instanciated_metadata['config.json'].get('ipv4_link_subnet', None).split('/')
+    hosts = list(ipv4_link_subnet.hosts())
+    ipv4_link_pe = f'{hosts[0]}'
+
+    if is_host_reachable_verbose(ipv4_link_pe):  # Test pass
+        pass_map += test_map_bit
+        result[test_id] = f'{pass_message}'
+    else:
+        if test_map_bit & fail:  # Test fail
+            fail_map += test_map_bit
+            result[test_id] = f'{fail_message}'
+        elif test_map_bit & warn:  # Test warn
+            warn_map += test_map_bit
+            result[test_id] = f'{warn_message}'
+    update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+    return
+
+
+# 6.1.2 Ping CPE
+def ping_ipv4__cpe(test_id):
+    result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
+
+    pass_message   = '6.1.2 Ping Test IPv4 CPE - Pass - Success'
+    warn_message   = '6.1.2 Ping Test IPv4 CPE - Warn - Failed'
+    fail_message   = '6.1.2 Ping Test IPv4 CPE - Fail - Failed'
+    ignore_message = '6.1.2 Ping Test IPv4 CPE - Ignore'
+
+    test_map_bit = 2 ** test_id
+
+    if test_map_bit & ignore:  # Test Ignore
+        ignore_map += test_map_bit
+        result[test_id] = ignore_message
+        update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+        return
+
+    instanciated_metadata = get_instanciated_metadata()
+    ipv4_link_subnet = instanciated_metadata['config.json'].get('ipv4_link_subnet', None).split('/')
+    hosts = list(ipv4_link_subnet.hosts())
+    ipv4_link_cpe = f'{hosts[1]}'
+
+    if is_host_reachable_verbose(ipv4_link_cpe):  # Test pass
+        pass_map += test_map_bit
+        result[test_id] = f'{pass_message}'
+    else:
+        if test_map_bit & fail:  # Test fail
+            fail_map += test_map_bit
+            result[test_id] = f'{fail_message}'
+        elif test_map_bit & warn:  # Test warn
+            warn_map += test_map_bit
+            result[test_id] = f'{warn_message}'
+    update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+    return
+
+
+# 6.1.3 Ping 8.8.8.8
+def ping_ipv4_8888(test_id):
+    result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
+
+    pass_message   = '6.1.3 Ping Test IPv4 8.8.8.8 - Pass - Success'
+    warn_message   = '6.1.3 Ping Test IPv4 8.8.8.8 - Warn - Failed'
+    fail_message   = '6.1.3 Ping Test IPv4 8.8.8.8 - Fail - Failed'
+    ignore_message = '6.1.3 Ping Test IPv4 8.8.8.8 - Ignore'
+
+    test_map_bit = 2 ** test_id
+
+    if test_map_bit & ignore:  # Test Ignore
+        ignore_map += test_map_bit
+        result[test_id] = ignore_message
+        update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+        return
+
+    if is_host_reachable_verbose('8.8.8.8'):  # Test pass
+        pass_map += test_map_bit
+        result[test_id] = f'{pass_message}'
+    else:
+        if test_map_bit & fail:  # Test fail
+            fail_map += test_map_bit
+            result[test_id] = f'{fail_message}'
+        elif test_map_bit & warn:  # Test warn
+            warn_map += test_map_bit
+            result[test_id] = f'{warn_message}'
+    update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+    return
+
+
+# 6.2 IPv6 addresses
+# 6.2.1 Ping PE
+def ping_ipv6___pe(test_id):
+    result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
+
+    pass_message   = '6.2.1 Ping Test IPv6 PE - Pass - Success'
+    warn_message   = '6.2.1 Ping Test IPv6 PE - Warn - Failed'
+    fail_message   = '6.2.1 Ping Test IPv6 PE - Fail - Failed'
+    ignore_message = '6.2.1 Ping Test IPv6 PE - Ignore'
+
+    test_map_bit = 2 ** test_id
+
+    if test_map_bit & ignore:  # Test Ignore
+        ignore_map += test_map_bit
+        result[test_id] = ignore_message
+        update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+        return
+
+    instanciated_metadata = get_instanciated_metadata()
+    ipv6_link_subnet = instanciated_metadata['config.json'].get('ipv6_link_subnet', None).split('/')
+    hosts = list(ipv6_link_subnet.hosts())
+    ipv6_link_pe = f'{hosts[0]}'
+
+    if is_host_reachable_verbose(ipv6_link_pe):  # Test pass
+        pass_map += test_map_bit
+        result[test_id] = f'{pass_message}'
+    else:
+        if test_map_bit & fail:  # Test fail
+            fail_map += test_map_bit
+            result[test_id] = f'{fail_message}'
+        elif test_map_bit & warn:  # Test warn
+            warn_map += test_map_bit
+            result[test_id] = f'{warn_message}'
+    update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+    return
+
+
+# 6.2.2 Ping CPE
+def ping_ipv6__cpe(test_id):
+    result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
+
+    pass_message   = '6.2.2 Ping Test IPv6 CPE - Pass - Success'
+    warn_message   = '6.2.2 Ping Test IPv6 CPE - Warn - Failed'
+    fail_message   = '6.2.2 Ping Test IPv6 CPE - Fail - Failed'
+    ignore_message = '6.2.2 Ping Test IPv6 CPE - Ignore'
+
+    test_map_bit = 2 ** test_id
+
+    if test_map_bit & ignore:  # Test Ignore
+        ignore_map += test_map_bit
+        result[test_id] = ignore_message
+        update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+        return
+
+    instanciated_metadata = get_instanciated_metadata()
+    ipv6_link_subnet = instanciated_metadata['config.json'].get('ipv6_link_subnet', None).split('/')
+    hosts = list(ipv6_link_subnet.hosts())
+    ipv6_link_cpe = f'{hosts[1]}'
+
+    if is_host_reachable_verbose(ipv6_link_cpe):  # Test pass
+        pass_map += test_map_bit
+        result[test_id] = f'{pass_message}'
+    else:
+        if test_map_bit & fail:  # Test fail
+            fail_map += test_map_bit
+            result[test_id] = f'{fail_message}'
+        elif test_map_bit & warn:  # Test warn
+            warn_map += test_map_bit
+            result[test_id] = f'{warn_message}'
+    update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+    return
+
+
+# 6.2.3 Ping 2001:4860:4860::8888
+def ping_ipv6_8888(test_id):
+    result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
+
+    pass_message   = '6.2.3 Ping Test IPv4 2001:4860:4860::8888 - Pass - Success'
+    warn_message   = '6.2.3 Ping Test IPv4 2001:4860:4860::8888 - Warn - Failed'
+    fail_message   = '6.2.3 Ping Test IPv4 2001:4860:4860::8888 - Fail - Failed'
+    ignore_message = '6.2.3 Ping Test IPv4 2001:4860:4860::8888 - Ignore'
+
+    test_map_bit = 2 ** test_id
+
+    if test_map_bit & ignore:  # Test Ignore
+        ignore_map += test_map_bit
+        result[test_id] = ignore_message
+        update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+        return
+
+    if is_host_reachable_verbose('2001:4860:4860::8888'):  # Test pass
+        pass_map += test_map_bit
+        result[test_id] = f'{pass_message}'
+    else:
+        if test_map_bit & fail:  # Test fail
+            fail_map += test_map_bit
+            result[test_id] = f'{fail_message}'
+        elif test_map_bit & warn:  # Test warn
+            warn_map += test_map_bit
+            result[test_id] = f'{warn_message}'
+    update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+    return
+
+
+# 6.3 DNS hostnames
+# 6.3.1 Ping www.google.com
+def ping_dns__ggle(test_id):
+    result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
+
+    pass_message   = '6.3.1 Ping Test www.google.com - Pass - Success'
+    warn_message   = '6.3.1 Ping Test www.google.com - Warn - Failed'
+    fail_message   = '6.3.1 Ping Test www.google.com - Fail - Failed'
+    ignore_message = '6.3.1 Ping Test www.google.com - Ignore'
+
+    test_map_bit = 2 ** test_id
+
+    if test_map_bit & ignore:  # Test Ignore
+        ignore_map += test_map_bit
+        result[test_id] = ignore_message
+        update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+        return
+
+    if is_host_reachable_verbose('www.google.com'):  # Test pass
+        pass_map += test_map_bit
+        result[test_id] = f'{pass_message}'
+    else:
+        if test_map_bit & fail:  # Test fail
+            fail_map += test_map_bit
+            result[test_id] = f'{fail_message}'
+        elif test_map_bit & warn:  # Test warn
             warn_map += test_map_bit
             result[test_id] = f'{warn_message}'
     update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)

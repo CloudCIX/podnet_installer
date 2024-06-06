@@ -431,6 +431,13 @@ def data_blob():
     inst_conf_ip6s(32)
     inst_conf_dnss(33)
     inst_conf_cmon(34)
+    ping_ipv4___pe(35)
+    ping_ipv4__cpe(36)
+    ping_ipv4_8888(37)
+    ping_ipv6___pe(38)
+    ping_ipv6__cpe(39)
+    ping_ipv6_8888(40)
+    ping_dns__ggle(41)
 
     pass_map, warn_map, fail_map, test_result = get_test_results()
     host_status, host_status_text = get_host_details()
