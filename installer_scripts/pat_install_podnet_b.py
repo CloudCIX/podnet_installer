@@ -65,22 +65,18 @@ def build(win):
 
     # 1.1.2 Configure Public interface
     # sort ipaddresses
-    ipv4_link_subnet = ipaddress.ip_network(config_data['ipv4_link_subnet'], strict=False)
-    hosts = list(ipv4_link_subnet.hosts())
-    subnet_mask = ipv4_link_subnet.prefixlen
-    ipv4_link_pe = f'{hosts[0]}'
-    ipv4_link_cpe = f'{hosts[1]}/{subnet_mask}'
-
-    ipv6_link_subnet = ipaddress.ip_network(config_data['ipv6_link_subnet'], strict=False)
-    hosts = list(ipv6_link_subnet.hosts())
-    subnet_mask = ipv6_link_subnet.prefixlen
-    ipv6_link_pe = f'{hosts[0]}'
-    ipv6_link_cpe = f'{hosts[1]}/{subnet_mask}'
+    ipv4_link_pe = f'{config_data["ipv4_link_pe"]}'
+    ipv4_link_cpe = f'{config_data["ipv4_link_cpe"]}'
+    ipv6_link_pe = f'{config_data["ipv6_link_pe"]}'
+    ipv6_link_cpe = f'{config_data["ipv6_link_cpe"]}'
 
     configured, error = net.build(
         host='localhost',
         identifier=public_iflname,
-        ips=[ipv4_link_cpe, ipv6_link_cpe],
+        ips=[
+            f'{ipv4_link_cpe}/{config_data["ipv4_link_subnet"].split("/")[1]}',
+            f'{ipv6_link_cpe}/{config_data["ipv6_link_subnet"].split("/")[1]}',
+        ],
         mac=public_mac,
         name='public0',
         routes=[{'to': 'default', 'via': ipv4_link_pe}, {'to': '::/0', 'via': ipv6_link_pe}],
@@ -272,9 +268,6 @@ def build(win):
     win.refresh()
 
     # PodNet IPs
-    ipv4_link_subnet = ipaddress.ip_network(config_data['ipv4_link_subnet'], strict=False)
-    ipv4_link_cpe = f'{list(ipv4_link_subnet.hosts())[1]}'
-
     primary_ipv4_subnet_items = config_data['primary_ipv4_subnet'].split('/')
     ipv6_subnet_items = config_data['ipv6_subnet'].split('/')
     mgmt_ipv6_b = f'{ipv6_subnet_items[0]}10:0:3'
@@ -289,6 +282,7 @@ def build(win):
     cop_portal_ipv4 = f'{ipaddress.ip_address(primary_ipv4_subnet_items[0]) + 5}'
     cop_nginxcop_ipv6 = f'{ipv6_subnet_items[0][:-1]}d0c6::4004:a'
     cop_portal_ipv6 = f'{ipv6_subnet_items[0][:-1]}d0c6::5002:4'
+
     firewall_rules = [
         # 3.1.1 Inbound IPv4
 
