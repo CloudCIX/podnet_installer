@@ -1064,14 +1064,84 @@ def inst_conf_ip4l(test_id):
     return
 
 
-# 3.2.10 Validation of `ipv6_link_subnet` from Instantiated Metadata config.json
+# 3.2.10 Validation of `ipv4_link_cpe` from Instantiated Metadata config.json
+def inst_conf_4cpe(test_id):
+    result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
+
+    pass_message   = '3.2.10 Instanciated config.json `ipv4_link_cpe` - Pass - is in `ipv4_link_subnet`'
+    warn_message   = '3.2.10 Instanciated config.json `ipv4_link_cpe` - Warn - is not in `ipv4_link_subnet`'
+    fail_message   = '3.2.10 Instanciated config.json `ipv4_link_cpe` - Fail - is not in `ipv4_link_subnet`'
+    ignore_message = '3.2.10 Instanciated config.json `ipv4_link_cpe` - Ignore'
+
+    test_map_bit = 2 ** test_id
+
+    if test_map_bit & ignore:                                       # Test Ignore
+        ignore_map += test_map_bit
+        result[test_id] = ignore_message
+        update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+        return
+
+    instanciated_metadata = get_instanciated_metadata()
+    ipv4_link_subnet = instanciated_metadata['config.json'].get('ipv4_link_subnet', '0.0.0.0/30')
+    ipv4_link_cpe = instanciated_metadata['config.json'].get('ipv4_link_cpe', '127.0.0.1')
+
+    if ipaddress.ip_address(ipv4_link_cpe) in ipaddress.ip_network(ipv4_link_subnet):   # Test pass
+        pass_map += test_map_bit
+        result[test_id] = f'{pass_message}'
+    else:
+        if test_map_bit & fail:                                    # Test fail
+            fail_map += test_map_bit
+            result[test_id] = f'{fail_message}'
+        elif test_map_bit & warn:                                  # Test warn
+            warn_map += test_map_bit
+            result[test_id] = f'{warn_message}'
+    update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+    return
+
+
+# 3.2.11 Validation of `ipv4_link_pe` from Instantiated Metadata config.json
+def inst_conf__4pe(test_id):
+    result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
+
+    pass_message   = '3.2.11 Instanciated config.json `ipv4_link_pe` - Pass - is in `ipv4_link_subnet`'
+    warn_message   = '3.2.11 Instanciated config.json `ipv4_link_pe` - Warn - is not in `ipv4_link_subnet`'
+    fail_message   = '3.2.11 Instanciated config.json `ipv4_link_pe` - Fail - is not in `ipv4_link_subnet`'
+    ignore_message = '3.2.11 Instanciated config.json `ipv4_link_pe` - Ignore'
+
+    test_map_bit = 2 ** test_id
+
+    if test_map_bit & ignore:                                       # Test Ignore
+        ignore_map += test_map_bit
+        result[test_id] = ignore_message
+        update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+        return
+
+    instanciated_metadata = get_instanciated_metadata()
+    ipv4_link_subnet = instanciated_metadata['config.json'].get('ipv4_link_subnet', '0.0.0.0/30')
+    ipv4_link_pe = instanciated_metadata['config.json'].get('ipv4_link_pe', '127.0.0.1')
+
+    if ipaddress.ip_address(ipv4_link_pe) in ipaddress.ip_network(ipv4_link_subnet):   # Test pass
+        pass_map += test_map_bit
+        result[test_id] = f'{pass_message}'
+    else:
+        if test_map_bit & fail:                                    # Test fail
+            fail_map += test_map_bit
+            result[test_id] = f'{fail_message}'
+        elif test_map_bit & warn:                                  # Test warn
+            warn_map += test_map_bit
+            result[test_id] = f'{warn_message}'
+    update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+    return
+
+
+# 3.2.12 Validation of `ipv6_link_subnet` from Instantiated Metadata config.json
 def inst_conf_ip6l(test_id):
     result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
 
-    pass_message   = '3.2.10 Instanciated config.json `ipv6_link_subnet` range - Pass - is >= /126'
-    warn_message   = '3.2.10 Instanciated config.json `ipv6_link_subnet` range - Warn - is not >= /126'
-    fail_message   = '3.2.10 Instanciated config.json `ipv6_link_subnet` range - Fail - is not >= /126'
-    ignore_message = '3.2.10 Instanciated config.json `ipv6_link_subnet` range - Ignore'
+    pass_message   = '3.2.12 Instanciated config.json `ipv6_link_subnet` range - Pass - is >= /126'
+    warn_message   = '3.2.12 Instanciated config.json `ipv6_link_subnet` range - Warn - is not >= /126'
+    fail_message   = '3.2.12 Instanciated config.json `ipv6_link_subnet` range - Fail - is not >= /126'
+    ignore_message = '3.2.12 Instanciated config.json `ipv6_link_subnet` range - Ignore'
 
     test_map_bit = 2 ** test_id
 
@@ -1098,14 +1168,84 @@ def inst_conf_ip6l(test_id):
     return
 
 
-# 3.2.11 Validation of `primary_ipv4_subnet` from Instantiated Metadata config.json
+# 3.2.13 Validation of `ipv6_link_cpe` from Instantiated Metadata config.json
+def inst_conf_6cpe(test_id):
+    result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
+
+    pass_message   = '3.2.13 Instanciated config.json `ipv6_link_cpe` - Pass - is in `ipv6_link_subnet`'
+    warn_message   = '3.2.13 Instanciated config.json `ipv6_link_cpe` - Warn - is not in `ipv6_link_subnet`'
+    fail_message   = '3.2.13 Instanciated config.json `ipv6_link_cpe` - Fail - is not in `ipv6_link_subnet`'
+    ignore_message = '3.2.13 Instanciated config.json `ipv6_link_cpe` - Ignore'
+
+    test_map_bit = 2 ** test_id
+
+    if test_map_bit & ignore:                                       # Test Ignore
+        ignore_map += test_map_bit
+        result[test_id] = ignore_message
+        update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+        return
+
+    instanciated_metadata = get_instanciated_metadata()
+    ipv6_link_subnet = instanciated_metadata['config.json'].get('ipv6_link_subnet', '::/128')
+    ipv6_link_cpe = instanciated_metadata['config.json'].get('ipv6_link_cpe', '::1')
+
+    if ipaddress.ip_address(ipv6_link_cpe) in ipaddress.ip_network(ipv6_link_subnet):   # Test pass
+        pass_map += test_map_bit
+        result[test_id] = f'{pass_message}'
+    else:
+        if test_map_bit & fail:                                    # Test fail
+            fail_map += test_map_bit
+            result[test_id] = f'{fail_message}'
+        elif test_map_bit & warn:                                  # Test warn
+            warn_map += test_map_bit
+            result[test_id] = f'{warn_message}'
+    update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+    return
+
+
+# 3.2.14 Validation of `ipv6_link_pe` from Instantiated Metadata config.json
+def inst_conf__6pe(test_id):
+    result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
+
+    pass_message   = '3.2.14 Instanciated config.json `ipv6_link_pe` - Pass - is in `ipv6_link_subnet`'
+    warn_message   = '3.2.14 Instanciated config.json `ipv6_link_pe` - Warn - is not in `ipv6_link_subnet`'
+    fail_message   = '3.2.14 Instanciated config.json `ipv6_link_pe` - Fail - is not in `ipv6_link_subnet`'
+    ignore_message = '3.2.14 Instanciated config.json `ipv6_link_pe` - Ignore'
+
+    test_map_bit = 2 ** test_id
+
+    if test_map_bit & ignore:                                       # Test Ignore
+        ignore_map += test_map_bit
+        result[test_id] = ignore_message
+        update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+        return
+
+    instanciated_metadata = get_instanciated_metadata()
+    ipv6_link_subnet = instanciated_metadata['config.json'].get('ipv6_link_subnet', '::/128')
+    ipv6_link_pe = instanciated_metadata['config.json'].get('ipv6_link_pe', '::1')
+
+    if ipaddress.ip_address(ipv6_link_pe) in ipaddress.ip_network(ipv6_link_subnet):   # Test pass
+        pass_map += test_map_bit
+        result[test_id] = f'{pass_message}'
+    else:
+        if test_map_bit & fail:                                    # Test fail
+            fail_map += test_map_bit
+            result[test_id] = f'{fail_message}'
+        elif test_map_bit & warn:                                  # Test warn
+            warn_map += test_map_bit
+            result[test_id] = f'{warn_message}'
+    update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+    return
+
+
+# 3.2.15 Validation of `primary_ipv4_subnet` from Instantiated Metadata config.json
 def inst_conf_ip4s(test_id):
     result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
 
-    pass_message   = '3.2.11 Instanciated config.json `primary_ipv4_subnet` range - Pass - is >= /29'
-    warn_message   = '3.2.11 Instanciated config.json `primary_ipv4_subnet` range - Warn - is not >= /29'
-    fail_message   = '3.2.11 Instanciated config.json `primary_ipv4_subnet` range - Fail - is not >= /29'
-    ignore_message = '3.2.11 Instanciated config.json `primary_ipv4_subnet` range - Ignore'
+    pass_message   = '3.2.15 Instanciated config.json `primary_ipv4_subnet` range - Pass - is >= /29'
+    warn_message   = '3.2.15 Instanciated config.json `primary_ipv4_subnet` range - Warn - is not >= /29'
+    fail_message   = '3.2.15 Instanciated config.json `primary_ipv4_subnet` range - Fail - is not >= /29'
+    ignore_message = '3.2.15 Instanciated config.json `primary_ipv4_subnet` range - Ignore'
 
     test_map_bit = 2 ** test_id
 
@@ -1132,14 +1272,14 @@ def inst_conf_ip4s(test_id):
     return
 
 
-# 3.2.12 Validation of `ipv6_subnet` from Instantiated Metadata config.json
+# 3.2.16 Validation of `ipv6_subnet` from Instantiated Metadata config.json
 def inst_conf_ip6s(test_id):
     result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
 
-    pass_message   = '3.2.12 Instanciated config.json `ipv6_subnet` range - Pass - is >= /48'
-    warn_message   = '3.2.12 Instanciated config.json `ipv6_subnet` range - Warn - is not >= /48'
-    fail_message   = '3.2.12 Instanciated config.json `ipv6_subnet` range - Fail - is not >= /48'
-    ignore_message = '3.2.12 Instanciated config.json `ipv6_subnet` range - Ignore'
+    pass_message   = '3.2.16 Instanciated config.json `ipv6_subnet` range - Pass - is >= /48'
+    warn_message   = '3.2.16 Instanciated config.json `ipv6_subnet` range - Warn - is not >= /48'
+    fail_message   = '3.2.16 Instanciated config.json `ipv6_subnet` range - Fail - is not >= /48'
+    ignore_message = '3.2.16 Instanciated config.json `ipv6_subnet` range - Ignore'
 
     test_map_bit = 2 ** test_id
 
@@ -1166,14 +1306,14 @@ def inst_conf_ip6s(test_id):
     return
 
 
-# 3.2.13 Validation of `dns_ips` from Instantiated Metadata config.json
+# 3.2.17 Validation of `dns_ips` from Instantiated Metadata config.json
 def inst_conf_dnss(test_id):
     result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
 
-    pass_message   = '3.2.13 Instanciated config.json `dns_ips` - Pass - all are valid IPs'
-    warn_message   = '3.2.13 Instanciated config.json `dns_ips` - Warn - all are not valid IPs'
-    fail_message   = '3.2.13 Instanciated config.json `dns_ips` - Fail - all are not valid IPs'
-    ignore_message = '3.2.13 Instanciated config.json `dns_ips` - Ignore'
+    pass_message   = '3.2.17 Instanciated config.json `dns_ips` - Pass - all are valid IPs'
+    warn_message   = '3.2.17 Instanciated config.json `dns_ips` - Warn - all are not valid IPs'
+    fail_message   = '3.2.17 Instanciated config.json `dns_ips` - Fail - all are not valid IPs'
+    ignore_message = '3.2.17 Instanciated config.json `dns_ips` - Ignore'
 
     test_map_bit = 2 ** test_id
 
@@ -1206,14 +1346,14 @@ def inst_conf_dnss(test_id):
     return
 
 
-# 3.2.14 Validation of `ceph_monitors` from Instantiated Metadata config.json
+# 3.2.18 Validation of `ceph_monitors` from Instantiated Metadata config.json
 def inst_conf_cmon(test_id):
     result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
 
-    pass_message   = '3.2.13 Instanciated config.json `ceph_monitors` - Pass - is list and all are valid IPs'
-    warn_message   = '3.2.13 Instanciated config.json `ceph_monitors` - Warn - Invalid'
-    fail_message   = '3.2.13 Instanciated config.json `ceph_monitors` - Fail - Invalid'
-    ignore_message = '3.2.13 Instanciated config.json `ceph_monitors` - Ignore'
+    pass_message   = '3.2.18 Instanciated config.json `ceph_monitors` - Pass - is list and all are valid IPs'
+    warn_message   = '3.2.18 Instanciated config.json `ceph_monitors` - Warn - Invalid'
+    fail_message   = '3.2.18 Instanciated config.json `ceph_monitors` - Fail - Invalid'
+    ignore_message = '3.2.18 Instanciated config.json `ceph_monitors` - Ignore'
 
     test_map_bit = 2 ** test_id
 
@@ -1280,9 +1420,7 @@ def ping_ipv4___pe(test_id):
         return
 
     instanciated_metadata = get_instanciated_metadata()
-    ipv4_link_subnet = instanciated_metadata['config.json'].get('ipv4_link_subnet', None).split('/')
-    hosts = list(ipv4_link_subnet.hosts())
-    ipv4_link_pe = f'{hosts[0]}'
+    ipv4_link_pe = instanciated_metadata['config.json'].get('ipv4_link_pe', '127.0.0.127')
 
     if is_host_reachable_verbose(ipv4_link_pe):  # Test pass
         pass_map += test_map_bit
@@ -1316,9 +1454,7 @@ def ping_ipv4__cpe(test_id):
         return
 
     instanciated_metadata = get_instanciated_metadata()
-    ipv4_link_subnet = instanciated_metadata['config.json'].get('ipv4_link_subnet', None).split('/')
-    hosts = list(ipv4_link_subnet.hosts())
-    ipv4_link_cpe = f'{hosts[1]}'
+    ipv4_link_cpe = instanciated_metadata['config.json'].get('ipv4_link_cpe', '127.0.0.127')
 
     if is_host_reachable_verbose(ipv4_link_cpe):  # Test pass
         pass_map += test_map_bit
@@ -1384,9 +1520,7 @@ def ping_ipv6___pe(test_id):
         return
 
     instanciated_metadata = get_instanciated_metadata()
-    ipv6_link_subnet = instanciated_metadata['config.json'].get('ipv6_link_subnet', None).split('/')
-    hosts = list(ipv6_link_subnet.hosts())
-    ipv6_link_pe = f'{hosts[0]}'
+    ipv6_link_pe = instanciated_metadata['config.json'].get('ipv6_link_pe', '::127')
 
     if is_host_reachable_verbose(ipv6_link_pe):  # Test pass
         pass_map += test_map_bit
@@ -1420,9 +1554,7 @@ def ping_ipv6__cpe(test_id):
         return
 
     instanciated_metadata = get_instanciated_metadata()
-    ipv6_link_subnet = instanciated_metadata['config.json'].get('ipv6_link_subnet', None).split('/')
-    hosts = list(ipv6_link_subnet.hosts())
-    ipv6_link_cpe = f'{hosts[1]}'
+    ipv6_link_cpe = instanciated_metadata['config.json'].get('ipv6_link_cpe', '::127')
 
     if is_host_reachable_verbose(ipv6_link_cpe):  # Test pass
         pass_map += test_map_bit
