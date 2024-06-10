@@ -65,9 +65,7 @@ def build(win):
 
     # 1.1.2 Configure Public interface
     # sort ipaddresses
-    ipv4_link_pe = f'{config_data["ipv4_link_pe"]}'
     ipv4_link_cpe = f'{config_data["ipv4_link_cpe"]}'
-    ipv6_link_pe = f'{config_data["ipv6_link_pe"]}'
     ipv6_link_cpe = f'{config_data["ipv6_link_cpe"]}'
 
     configured, error = net.build(

@@ -64,9 +64,7 @@ def build(win):
 
     # 1.1.2 Configure Public interface
     # sort ipaddresses
-    ipv4_link_pe = f'{config_data["ipv4_link_pe"]}'
     ipv4_link_cpe = f'{config_data["ipv4_link_cpe"]}'
-    ipv6_link_pe = f'{config_data["ipv6_link_pe"]}'
     ipv6_link_cpe = f'{config_data["ipv6_link_cpe"]}'
 
     configured, error = net.build(
@@ -78,7 +76,6 @@ def build(win):
         ],
         mac=public_mac,
         name='public0',
-        routes=[{'to': 'default', 'via': ipv4_link_pe}, {'to': '::/0', 'via': ipv6_link_pe}],
     )
     if configured is False:
         win.addstr(2, 1, '1.1 Public:FAILED', curses.color_pair(3))
