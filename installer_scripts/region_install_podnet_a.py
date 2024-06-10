@@ -268,8 +268,7 @@ def build(win):
     win.refresh()
 
     # PodNet IPs
-    ipv4_link_subnet = ipaddress.ip_network(config_data['ipv4_link_subnet'], strict=False)
-    ipv4_link_cpe = f'{list(ipv4_link_subnet.hosts())[1]}'
+    ipv4_link_cpe = f'{config_data["ipv4_link_cpe"]}'
 
     # Robot IPs
     pod_appliance = f'{ipv6_subnet_items[0]}6000:1'
@@ -446,4 +445,3 @@ def build(win):
 
     # Finish
     return True
-
