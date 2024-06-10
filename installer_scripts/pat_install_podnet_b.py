@@ -118,11 +118,11 @@ def build(win):
 
     # 1.3.2 Configure oob interface
     # sort ipaddresses
-    oob_ip = f'10.0.0.253/16'
+    oob_ip = f'10.0.0.253'
     configured, error = net.build(
         host='localhost',
         identifier=oob_iflname,
-        ips=[oob_ip],
+        ips=[f'{oob_ip}/16'],
         mac=oob_mac,
         name='oob0',
         routes=[{'to': '10.0.0.0/8', 'via': '10.0.0.1'}],
