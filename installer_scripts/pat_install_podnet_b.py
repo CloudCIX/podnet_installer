@@ -79,7 +79,6 @@ def build(win):
         ],
         mac=public_mac,
         name='public0',
-        routes=[{'to': 'default', 'via': ipv4_link_pe}, {'to': '::/0', 'via': ipv6_link_pe}],
     )
     if configured is False:
         win.addstr(2, 1, '1.1 Public:FAILED', curses.color_pair(3))
