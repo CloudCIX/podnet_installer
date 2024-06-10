@@ -166,7 +166,7 @@ def set_up_sqlite():
     #        Reset the Data Blob ready to return data                        #
     ##########################################################################
 
-    number_of_tests = 35                   # The number of tests
+    number_of_tests = 54                   # The number of tests
     test_result     = []                   # A placeholder for test_results
 
     for i in range(number_of_tests):
