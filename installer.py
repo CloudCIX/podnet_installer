@@ -142,7 +142,7 @@ def banner(clear, message):
         stdscr.clear()
     if message == 'header':
         line(1, cols)
-        msg = f'{"CloudCIX Pod Install Utility         Version Date: 14th May 2024":^{cols}}'
+        msg = f'{"CloudCIX Pod Install Utility         Version Date: 7th June 2024":^{cols}}'
         stdscr.addstr(2, 1, msg, curses.A_BOLD | curses.A_REVERSE)
         line(3, cols)
     elif message == 'footer':
