@@ -441,7 +441,11 @@ def build(win):
         file.write('*/15 * * * * root /etc/cloudcix/pod/pod_installer/robosoc.py > /dev/null 2>&1 \n')
     # for cron job file, file must be executable so set to +x
     try:
-        subprocess.run(['sudo', 'chmod', '+x', '/etc/cron.d/robosoc'], check=True)
+        subprocess.run(
+            'sudo chmod +x /etc/cron.d/robosoc > /dev/null 2&>1',
+            shell=True,
+            check=True,
+        )
     except subprocess.CalledProcessError as error:
         win.addstr(2, 1, '4.1 RoboSOC Cron job setup:               FAILED', curses.color_pair(3))
         win.addstr(18, 1, f'Error: {error}', curses.color_pair(3))

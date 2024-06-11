@@ -191,9 +191,6 @@ def build(win):
     win.addstr(2, 1, '3.1 Preparing Firewall Rules:                   ', curses.color_pair(2))
     win.refresh()
 
-    # PodNet IPs
-    ipv4_link_cpe = f'{config_data["ipv4_link_cpe"]}'
-
     # COP IPs
     cop_nginxcop_ipv4 = f'{ipaddress.ip_address(primary_ipv4_subnet_items[0]) + 4}'
     cop_portal_ipv4 = f'{ipaddress.ip_address(primary_ipv4_subnet_items[0]) + 5}'
@@ -208,8 +205,7 @@ def build(win):
         {'order': 3112, 'version': '4', 'iiface': 'public0', 'oiface': '', 'protocol': 'icmp', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': ['any'], 'port': []},
         # DNS Accept on Public interface
         {'order': 3113, 'version': '4', 'iiface': 'public0', 'oiface': '', 'protocol': 'dns', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': ['any'], 'port': []},
-        # VPN Accept on Public interface CPE since it has Region in blend
-        {'order': 3114, 'version': '4', 'iiface': 'public0', 'oiface': '', 'protocol': 'vpn', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': [ipv4_link_cpe], 'port': []},
+        # VPN Accept on Public interface CPE: N/A for COP
         # Ping Accept on Management interface
         {'order': 3115, 'version': '4', 'iiface': 'mgmt0', 'oiface': '', 'protocol': 'icmp', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Ping Accept on OOB interface IP
@@ -333,7 +329,11 @@ def build(win):
         file.write('*/15 * * * * root /etc/cloudcix/pod/pod_installer/robosoc.py > /dev/null 2>&1 \n')
     # for cron job file, file must be executable so set to +x
     try:
-        subprocess.run(['sudo', 'chmod', '+x', '/etc/cron.d/robosoc'], check=True)
+        subprocess.run(
+            'sudo chmod +x /etc/cron.d/robosoc > /dev/null 2&>1',
+            shell=True,
+            check=True,
+        )
     except subprocess.CalledProcessError as error:
         win.addstr(2, 1, '4.1 RoboSOC Cron job setup:               FAILED', curses.color_pair(3))
         win.addstr(18, 1, f'Error: {error}', curses.color_pair(3))

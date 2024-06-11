@@ -36,7 +36,11 @@ def update_netplan_config_routes(interface, target_route_to, new_route_values):
 
         # Apply the new configuration
         try:
-            subprocess.run(['sudo', 'netplan', 'apply'], check=True)
+            subprocess.run(
+                'sudo netplan apply > /dev/null 2&>1',
+                shell=True,
+                check=True,
+            )
             return True, f'Applied updated netplan configuration for {interface}.'
         except subprocess.CalledProcessError as error:
             return False, f'Error occurred while applying netplan configuration: {error}'
@@ -149,7 +153,7 @@ def build(win):
     win.refresh()
     try:
         subprocess.run(
-            'curl https://raw.githubusercontent.com/CloudCIX/pod_yaml/master/region/docker-compose.yml -o /etc/cloudcix/docker/docker-compose.yml',
+            'curl https://raw.githubusercontent.com/CloudCIX/pod_yaml/master/region/docker-compose.yml -o /etc/cloudcix/docker/docker-compose.yml > /dev/null 2&>1',
             shell=True,
             check=True,
         )

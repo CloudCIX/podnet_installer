@@ -207,8 +207,7 @@ def build(win):
         {'order': 3112, 'version': '4', 'iiface': 'public0', 'oiface': '', 'protocol': 'icmp', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': ['any'], 'port': []},
         # DNS Accept on Public interface
         {'order': 3113, 'version': '4', 'iiface': 'public0', 'oiface': '', 'protocol': 'dns', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': ['any'], 'port': []},
-        # VPN Accept on Public interface CPE since it has Region in blend
-        {'order': 3114, 'version': '4', 'iiface': 'public0', 'oiface': '', 'protocol': 'vpn', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': [ipv4_link_cpe], 'port': []},
+        # VPN Accept on Public interface CPE: N/A for COP
         # Ping Accept on Management interface
         {'order': 3115, 'version': '4', 'iiface': 'mgmt0', 'oiface': '', 'protocol': 'icmp', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Ping Accept on OOB interface IP
