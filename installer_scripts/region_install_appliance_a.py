@@ -37,7 +37,7 @@ def update_netplan_config_routes(interface, target_route_to, new_route_values):
         # Apply the new configuration
         try:
             subprocess.run(
-                'sudo netplan apply > /dev/null 2&>1',
+                'sudo netplan apply > /dev/null 2>&1',
                 shell=True,
                 check=True,
             )
@@ -131,7 +131,7 @@ def build(win):
     updated_config = {key: logical_ifnames.get(key, val) for key, val in config_json.items()}
     with open('/etc/cloudcix/pod/configs/config.json', 'w') as file:
         json.dump(updated_config, file, indent=4)
-    win.addstr(1, 1, '2. Update Config json:                   SUCCESS', curses.color_pair(2))
+    win.addstr(1, 1, '2. Update Config json:                   SUCCESS', curses.color_pair(4))
 
     win.addstr(18, 1, f'Please press ENTER to continue Docker setup block.        ', curses.color_pair(2))
     win.refresh()
@@ -153,11 +153,11 @@ def build(win):
     win.refresh()
     try:
         subprocess.run(
-            'curl https://raw.githubusercontent.com/CloudCIX/pod_yaml/master/region/docker-compose.yml -o /etc/cloudcix/docker/docker-compose.yml > /dev/null 2&>1',
+            'curl https://raw.githubusercontent.com/CloudCIX/pod_yaml/master/region/docker-compose.yml -o /etc/cloudcix/docker/docker-compose.yml > /dev/null 2>&1',
             shell=True,
             check=True,
         )
-        win.addstr(2, 1, '5.1 Dowloading the docker-compose.yml:   SUCCESS', curses.color_pair(3))
+        win.addstr(2, 1, '5.1 Dowloading the docker-compose.yml:   SUCCESS', curses.color_pair(4))
         win.refresh()
     except subprocess.CalledProcessError as error:
         win.addstr(2, 1, '5.1 Dowloading the docker-compose.yml:    FAILED', curses.color_pair(3))
@@ -174,11 +174,11 @@ def build(win):
     win.refresh()
     try:
         subprocess.run(
-            'sudo docker-compose --file /etc/cloudcix/docker/docker-compose.yml up -d  > /dev/null 2>&1',
+            'sudo docker compose --file /etc/cloudcix/docker/docker-compose.yml up -d  > /dev/null 2>&1',
             shell=True,
             check=True,
         )
-        win.addstr(4, 1, '5.3 Starting Docker services:            SUCCESS', curses.color_pair(3))
+        win.addstr(4, 1, '5.3 Starting Docker services:            SUCCESS', curses.color_pair(4))
         win.refresh()
     except subprocess.CalledProcessError as error:
         win.addstr(4, 1, '5.3 Starting Docker services:             FAILED', curses.color_pair(3))

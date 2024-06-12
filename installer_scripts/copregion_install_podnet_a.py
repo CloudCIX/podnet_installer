@@ -252,7 +252,7 @@ def build(win):
     updated_config = {key: logical_ifnames.get(key, val) for key, val in config_json.items()}
     with open('/etc/cloudcix/pod/configs/config.json', 'w') as file:
         json.dump(updated_config, file, indent=4)
-    win.addstr(1, 1, '2. Update Config json:                   SUCCESS', curses.color_pair(2))
+    win.addstr(1, 1, '2. Update Config json:                   SUCCESS', curses.color_pair(4))
 
     win.addstr(18, 1, f'Please press ENTER to continue Firewall setup block.        ', curses.color_pair(2))
     win.refresh()
@@ -408,7 +408,7 @@ def build(win):
         {'order': 3165, 'version': '6', 'iiface': '', 'oiface': 'inter0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
 
     ]
-    win.addstr(2, 1, '3.1 Preparing Firewall Rules:            SUCCESS', curses.color_pair(2))
+    win.addstr(2, 1, '3.1 Preparing Firewall Rules:            SUCCESS', curses.color_pair(4))
 
     # 3.2 Apply Firewall rules
     win.addstr(3, 1, '3.2 Configuring Firewall Rules:                 ', curses.color_pair(2))
@@ -442,7 +442,7 @@ def build(win):
     # for cron job file, file must be executable so set to +x
     try:
         subprocess.run(
-            'sudo chmod +x /etc/cron.d/robosoc > /dev/null 2&>1',
+            'sudo chmod +x /etc/cron.d/robosoc > /dev/null 2>&1',
             shell=True,
             check=True,
         )
@@ -450,7 +450,7 @@ def build(win):
         win.addstr(2, 1, '4.1 RoboSOC Cron job setup:               FAILED', curses.color_pair(3))
         win.addstr(18, 1, f'Error: {error}', curses.color_pair(3))
         win.refresh()
-    win.addstr(2, 1, '4.1 RoboSOC Cron job setup:              SUCCESS', curses.color_pair(2))
+    win.addstr(2, 1, '4.1 RoboSOC Cron job setup:              SUCCESS', curses.color_pair(4))
     win.refresh()
 
     # 5 Docker setup
