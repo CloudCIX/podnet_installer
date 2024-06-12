@@ -188,7 +188,7 @@ def build(win):
     win.refresh()
     try:
         subprocess.run(
-            'sudo docker-compose --file /etc/cloudcix/docker/docker-compose.yml up -d  > /dev/null 2>&1',
+            'sudo docker compose --file /etc/cloudcix/docker/docker-compose.yml up -d  > /dev/null 2>&1',
             shell=True,
             check=True,
         )
