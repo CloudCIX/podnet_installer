@@ -38,7 +38,7 @@ def update_netplan_config_routes(interface, target_route_to, new_route_values):
         # Apply the new configuration
         try:
             subprocess.run(
-                'sudo netplan apply > /dev/null 2&>1',
+                'sudo netplan apply > /dev/null 2>&1',
                 shell=True,
                 check=True,
             )
@@ -132,7 +132,7 @@ def build(win):
     updated_config = {key: logical_ifnames.get(key, val) for key, val in config_json.items()}
     with open('/etc/cloudcix/pod/configs/config.json', 'w') as file:
         json.dump(updated_config, file, indent=4)
-    win.addstr(1, 1, '2. Update Config json:                   SUCCESS', curses.color_pair(2))
+    win.addstr(1, 1, '2. Update Config json:                   SUCCESS', curses.color_pair(4))
 
     win.addstr(18, 1, f'Please press ENTER to continue Docker setup block.        ', curses.color_pair(2))
     win.refresh()
@@ -154,11 +154,11 @@ def build(win):
     win.refresh()
     try:
         subprocess.run(
-            'curl https://raw.githubusercontent.com/CloudCIX/pod_yaml/master/copregion/docker-compose.yml -o /etc/cloudcix/docker/docker-compose.yml > /dev/null 2&>1',
+            'curl https://raw.githubusercontent.com/CloudCIX/pod_yaml/master/copregion/docker-compose.yml -o /etc/cloudcix/docker/docker-compose.yml > /dev/null 2>&1',
             shell=True,
             check=True,
         )
-        win.addstr(2, 1, '5.1 Dowloading the docker-compose.yml:   SUCCESS', curses.color_pair(3))
+        win.addstr(2, 1, '5.1 Dowloading the docker-compose.yml:   SUCCESS', curses.color_pair(4))
         win.refresh()
     except subprocess.CalledProcessError as error:
         win.addstr(2, 1, '5.1 Dowloading the docker-compose.yml:    FAILED', curses.color_pair(3))
@@ -171,11 +171,11 @@ def build(win):
     win.refresh()
     try:
         subprocess.run(
-            'curl -s https://raw.githubusercontent.com/CloudCIX/pod_yaml/master/copregion/default.conf.template -o /etc/cloudcix/docker/templates/cop/default.conf.template > /dev/null 2&>1',
+            'curl -s https://raw.githubusercontent.com/CloudCIX/pod_yaml/master/copregion/default.conf.template -o /etc/cloudcix/docker/templates/cop/default.conf.template > /dev/null 2>&1',
             shell=True,
             check=True,
         )
-        win.addstr(3, 1, '5.2 Dowloading the default.conf.template:SUCCESS', curses.color_pair(3))
+        win.addstr(3, 1, '5.2 Dowloading the default.conf.template:SUCCESS', curses.color_pair(4))
         win.refresh()
     except subprocess.CalledProcessError as error:
         win.addstr(3, 1, '5.2 Dowloading the default.conf.template: FAILED', curses.color_pair(3))
@@ -192,7 +192,7 @@ def build(win):
             shell=True,
             check=True,
         )
-        win.addstr(4, 1, '5.3 Starting Docker services:            SUCCESS', curses.color_pair(3))
+        win.addstr(4, 1, '5.3 Starting Docker services:            SUCCESS', curses.color_pair(4))
         win.refresh()
     except subprocess.CalledProcessError as error:
         win.addstr(4, 1, '5.3 Starting Docker services:             FAILED', curses.color_pair(3))
@@ -209,7 +209,7 @@ def build(win):
         with CronTab(user='root') as cron:
             job = cron.new('docker restart user_expiration_cron')
             job.setall('0 4 * * 1')
-    win.addstr(5, 1, '5.4 User expiration notifications:       SUCCESS', curses.color_pair(2))
+    win.addstr(5, 1, '5.4 User expiration notifications:       SUCCESS', curses.color_pair(4))
     win.refresh()
 
     # 5.5 Setup Cron job for backing up API PGSQL database
@@ -223,7 +223,7 @@ def build(win):
                 'docker exec -t pgsqlapi pg_dumpall -F t -U postgres > api_backup_$(date +%d-%m-%y).tar'
             )
             job.setall('0 0 * * *')
-    win.addstr(6, 1, '5.5 Backing up API PGSQL database:       SUCCESS', curses.color_pair(2))
+    win.addstr(6, 1, '5.5 Backing up API PGSQL database:       SUCCESS', curses.color_pair(4))
     win.refresh()
 
     # 5.6 Reset Robot password less access on PodNet A

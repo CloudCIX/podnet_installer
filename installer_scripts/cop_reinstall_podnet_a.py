@@ -173,7 +173,7 @@ def build(win):
     updated_config = {key: logical_ifnames.get(key, val) for key, val in config_json.items()}
     with open('/etc/cloudcix/pod/configs/config.json', 'w') as file:
         json.dump(updated_config, file, indent=4)
-    win.addstr(1, 1, '2. Update Config json:                   SUCCESS', curses.color_pair(2))
+    win.addstr(1, 1, '2. Update Config json:                   SUCCESS', curses.color_pair(4))
 
     win.addstr(18, 1, f'Please press ENTER to continue Firewall setup block.        ', curses.color_pair(2))
     win.refresh()
@@ -298,7 +298,7 @@ def build(win):
         # Allow all From Inter Interface: N/A
 
     ]
-    win.addstr(2, 1, '3.1 Preparing Firewall Rules:            SUCCESS', curses.color_pair(2))
+    win.addstr(2, 1, '3.1 Preparing Firewall Rules:            SUCCESS', curses.color_pair(4))
 
     # 3.2 Apply Firewall rules
     win.addstr(3, 1, '3.2 Configuring Firewall Rules:                 ', curses.color_pair(2))
@@ -331,12 +331,16 @@ def build(win):
         file.write('*/15 * * * * root /etc/cloudcix/pod/pod_installer/robosoc.py > /dev/null 2>&1 \n')
     # for cron job file, file must be executable so set to +x
     try:
-        subprocess.run(['sudo', 'chmod', '+x', '/etc/cron.d/robosoc'], check=True)
+        subprocess.run(
+            'sudo chmod +x /etc/cron.d/robosoc > /dev/null 2>&1',
+            shell=True,
+            check=True,
+        )
     except subprocess.CalledProcessError as error:
         win.addstr(2, 1, '4.1 RoboSOC Cron job setup:               FAILED', curses.color_pair(3))
         win.addstr(18, 1, f'Error: {error}', curses.color_pair(3))
         win.refresh()
-    win.addstr(2, 1, '4.1 RoboSOC Cron job setup:              SUCCESS', curses.color_pair(2))
+    win.addstr(2, 1, '4.1 RoboSOC Cron job setup:              SUCCESS', curses.color_pair(4))
     win.refresh()
 
     # 5 Docker setup
