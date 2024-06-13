@@ -1878,6 +1878,145 @@ def inst_conf_cmon(test_id):
     return
 
 
+# 5 ENV Tests
+# 5.1 Keys
+# 5.1.1 Validation of pod_number from Instantiated Metadata env file
+def inst__env_pnum(test_id):
+    result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
+
+    pass_message   = '5.1.1 Instanciated env `pod_number` - Pass - in range'
+    warn_message   = '5.1.1 Instanciated env `pod_number` - Warn - not in range'
+    fail_message   = '5.1.1 Instanciated env `pod_number` - Fail - not in range'
+    ignore_message = '5.1.1 Instanciated env `pod_number` - Ignore'
+
+    test_map_bit = 2 ** test_id
+
+    if test_map_bit & ignore:                                       # Test Ignore
+        ignore_map += test_map_bit
+        result[test_id] = ignore_message
+        update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+        return
+
+    instanciated_metadata = get_instanciated_metadata()
+    pod_number = instanciated_metadata['.env'].get('POD_NUMBER', -1)
+
+    if int(pod_number) in range(0, 255):                            # Test pass
+        pass_map += test_map_bit
+        result[test_id] = f'{pass_message}'
+    else:
+        if test_map_bit & fail:                                     # Test fail
+            fail_map += test_map_bit
+            result[test_id] = f'{fail_message}'
+        elif test_map_bit & warn:                                   # Test warn
+            warn_map += test_map_bit
+            result[test_id] = f'{warn_message}'
+    update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+    return
+
+
+# 5.1.2 Validation of pod_name from Instantiated Metadata .env
+def inst__env_pnam(test_id):
+    result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
+
+    pass_message   = '5.1.2 Instanciated .env `pod_name` - Pass - Pod Name ='
+    warn_message   = '5.1.2 Instanciated .env `pod_name` - Warn - Pod Name ='
+    fail_message   = '5.1.2 Instanciated .env `pod_name` - Fail - Pod Name ='
+    ignore_message = '5.1.2 Instanciated .env `pod_name` - Ignore'
+
+    test_map_bit = 2 ** test_id
+
+    if test_map_bit & ignore:                                       # Test Ignore
+        ignore_map += test_map_bit
+        result[test_id] = ignore_message
+        update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+        return
+
+    instanciated_metadata = get_instanciated_metadata()
+    pod_name = instanciated_metadata['.env'].get('POD_NAME', '')
+
+    if pod_name != '':                                              # Test pass
+        pass_map += test_map_bit
+        result[test_id] = f'{pass_message} {pod_name}'
+    else:
+        if test_map_bit & fail:                                     # Test fail
+            fail_map += test_map_bit
+            result[test_id] = f'{fail_message} {pod_name}'
+        elif test_map_bit & warn:                                   # Test warn
+            warn_map += test_map_bit
+            result[test_id] = f'{warn_message} {pod_name}'
+    update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+    return
+
+
+# 5.1.3 Validation of organization_url from Instantiated Metadata .env
+def inst__env_ourl(test_id):
+    result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
+
+    pass_message   = '5.1.3 Instanciated .env `organization_url` - Pass - URL ='
+    warn_message   = '5.1.3 Instanciated .env `organization_url` - Warn - URL ='
+    fail_message   = '5.1.3 Instanciated .env `organization_url` - Fail - URL ='
+    ignore_message = '5.1.3 Instanciated .env `organization_url` - Ignore'
+
+    test_map_bit = 2 ** test_id
+
+    if test_map_bit & ignore:                                       # Test Ignore
+        ignore_map += test_map_bit
+        result[test_id] = ignore_message
+        update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+        return
+
+    instanciated_metadata = get_instanciated_metadata()
+    organization_url = instanciated_metadata['.env'].get('ORGANIZATION_URL', None)
+
+    if organization_url not in ['', None]:                                              # Test pass
+        pass_map += test_map_bit
+        result[test_id] = f'{pass_message} {organization_url}'
+    else:
+        if test_map_bit & fail:                                     # Test fail
+            fail_map += test_map_bit
+            result[test_id] = f'{fail_message} {organization_url}'
+        elif test_map_bit & warn:                                   # Test warn
+            warn_map += test_map_bit
+            result[test_id] = f'{warn_message} {organization_url}'
+    update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+    return
+
+
+# 5.1.4 Validation of cloudcix_version from Instantiated Metadata .env
+def inst__env_cixv(test_id):
+    result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map = get_test_details()
+
+    pass_message   = '5.1.4 Instanciated .env `cloudcix_version` - Pass - Version ='
+    warn_message   = '5.1.4 Instanciated .env `cloudcix_version` - Warn - Version ='
+    fail_message   = '5.1.4 Instanciated .env `cloudcix_version` - Fail - Version ='
+    ignore_message = '5.1.4 Instanciated .env `cloudcix_version` - Ignore'
+
+    test_map_bit = 2 ** test_id
+
+    if test_map_bit & ignore:                                       # Test Ignore
+        ignore_map += test_map_bit
+        result[test_id] = ignore_message
+        update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+        return
+
+    instanciated_metadata = get_instanciated_metadata()
+    cloudcix_version = instanciated_metadata['.env'].get('CLOUDCIX_VERSION', '')
+
+    if isinstance(cloudcix_version, int) is True:                   # Test pass
+        pass_map += test_map_bit
+        result[test_id] = f'{pass_message} {pod_name}'
+    else:
+        if test_map_bit & fail:                                     # Test fail
+            fail_map += test_map_bit
+            result[test_id] = f'{fail_message} {pod_name}'
+        elif test_map_bit & warn:                                   # Test warn
+            warn_map += test_map_bit
+            result[test_id] = f'{warn_message} {pod_name}'
+    update_test_details(result, fail, ignore, warn, fail_map, warn_map, ignore_map, pass_map)
+    return
+
+
+
 def is_host_reachable_verbose(host, count=4):
     success = False
     for i in range(count):
