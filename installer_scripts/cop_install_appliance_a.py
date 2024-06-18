@@ -191,21 +191,8 @@ def build(win):
     win.refresh()
 
     # 5.8 Delete `pat` user's SSH key pair on Appliance
-    win.addstr(9, 1, '5.8 Delete `pat` user SSH key pair on Appliance:          ', curses.color_pair(2))
+    win.addstr(9, 1, '5.8 Delete `pat` user SSH key pair on Appliance:       N/A', curses.color_pair(2))
     win.refresh()
-    try:
-        subprocess.run(
-            'sudo rm /home/pat/.ssh/id_rsa && sudo rm /home/pat/.ssh/id_rsa.pub',
-            shell=True,
-            check=True,
-        )
-        win.addstr(9, 1, '5.8 Delete `pat` user SSH key pair on Appliance:   SUCCESS', curses.color_pair(4))
-        win.refresh()
-    except subprocess.CalledProcessError as error:
-        win.addstr(9, 1, '5.8 Delete `pat` user SSH key pair on Appliance:    FAILED', curses.color_pair(3))
-        win.addstr(18, 1, f'Error: {error}', curses.color_pair(3))
-        win.refresh()
-        return False
 
     win.addstr(18, 1, f'Please press ENTER to continue Reset Network Routes block.', curses.color_pair(2))
     win.refresh()
