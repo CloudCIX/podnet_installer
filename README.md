@@ -51,6 +51,7 @@ Installer Tasks:
   - 5.5 Setup Cron job for backing up pgsqlapi database (cop)
   - 5.6 Configure passwordless access for robot user to PodNet A (region)
   - 5.7 Configure passwordless access for robot user to PodNet B (region)
+  - 5.8 Delete `pat` user's SSH key pair on Appliance (region)
   - 5.8 Update the IPv4 default route to pms1
   - 5.9 Update the IPv6 default route to :10:0:1
 
