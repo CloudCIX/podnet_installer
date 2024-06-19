@@ -51,15 +51,16 @@ def update_netplan_config_routes(interface, target_route_to, new_route_values):
 
 def disable_robot_password_ssh(podnet_ip):
     # move the robot.conf from /etc/cloudcix/pod/templates/robot.conf to /etc/ssh/sshd_config.d/robot.conf
-    payload = """if ! echo "Match user robot\nPasswordAuthentication no" > /etc/ssh/sshd_config.d/robot.conf 2>&1; then
+    payload = """
+if ! echo "Match user robot\nPasswordAuthentication no" | sudo tee /etc/ssh/sshd_config.d/robot.conf > /dev/null 2>&1; then
     echo "300: Failed to create /etc/ssh/sshd_config.d/robot.conf"
-    exit(1)
+    exit 1
 fi 
-if ! sudo systemctl restart sshd > /dev/null 2>&1; then
+if ! sudo systemctl restart ssh > /dev/null 2>&1; then
     echo "301: Failed to restart sshd service"
-    exit(1)
+    exit 1
 fi
-echo "000: Successfuly created /etc/ssh/sshd_config.d/robot.conf and restarted sshd service" 
+echo "000: Successfully created /etc/ssh/sshd_config.d/robot.conf and restarted sshd service"
     """
     # Deploy the bash script to the Host
     try:
@@ -250,6 +251,23 @@ def build(win):
         win.refresh()
     else:
         win.addstr(8, 1, '5.7 Reset Robot password less access on PodNet B:   FAILED', curses.color_pair(3))
+        win.refresh()
+        return False
+
+    # 5.8 Delete `pat` user's SSH key pair on Appliance
+    win.addstr(9, 1, '5.8 Delete `pat` user SSH key pair on Appliance:          ', curses.color_pair(2))
+    win.refresh()
+    try:
+        subprocess.run(
+            'sudo rm /home/pat/.ssh/id_rsa && sudo rm /home/pat/.ssh/id_rsa.pub',
+            shell=True,
+            check=True,
+        )
+        win.addstr(9, 1, '5.8 Delete `pat` user SSH key pair on Appliance:   SUCCESS', curses.color_pair(4))
+        win.refresh()
+    except subprocess.CalledProcessError as error:
+        win.addstr(9, 1, '5.8 Delete `pat` user SSH key pair on Appliance:    FAILED', curses.color_pair(3))
+        win.addstr(18, 1, f'Error: {error}', curses.color_pair(3))
         win.refresh()
         return False
 
