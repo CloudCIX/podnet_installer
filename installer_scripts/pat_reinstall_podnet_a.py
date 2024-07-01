@@ -267,7 +267,7 @@ def build(win):
     # PodNet IPs
     primary_ipv4_subnet_items = config_data['primary_ipv4_subnet'].split('/')
     ipv6_subnet_items = config_data['ipv6_subnet'].split('/')
-    mgmt_ipv6_b = f'{ipv6_subnet_items[0]}10:0:3'
+    mgmt_ipv6_a = f'{ipv6_subnet_items[0]}10:0:2'
 
     # Robot IPs
     pod_appliance = f'{ipv6_subnet_items[0]}6000:1'
@@ -311,7 +311,7 @@ def build(win):
         # Ping Accept on Public interface
         {'order': 3124, 'version': '6', 'iiface': 'mgmt0', 'oiface': '', 'protocol': 'icmp', 'action': 'accept', 'log': False, 'source': ['any'], 'destination': ['any'], 'port': []},
         # SSH to Mgmt Interface by Robot
-        {'order': 3125, 'version': '6', 'iiface': 'mgmt0', 'oiface': '', 'protocol': 'tcp', 'action': 'accept','log': True, 'source': [robot_ipv6, robotworker_ipv6, pod_appliance], 'destination': [mgmt_ipv6_b], 'port': ['22']},
+        {'order': 3125, 'version': '6', 'iiface': 'mgmt0', 'oiface': '', 'protocol': 'tcp', 'action': 'accept','log': True, 'source': [robot_ipv6, robotworker_ipv6, pod_appliance], 'destination': [mgmt_ipv6_a], 'port': ['22']},
         # Block all IPv6 traffic to Private interface: Since default rules are blocked, no need this.
         # Block all IPv6 traffic to Inter interface: Since default rules are blocked, no need this.
 
@@ -384,28 +384,32 @@ def build(win):
         # Outbound Block From Private to Public: Since default rules are blocked, no need this
 
         # 3.1.5 Outbound IPv4
+        # Allow all From lo Interface
+        {'order': 3151, 'version': '4', 'iiface': '', 'oiface': 'lo', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Allow all From Public Interface
-        {'order': 3151, 'version': '4', 'iiface': '', 'oiface': 'public0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
+        {'order': 3152, 'version': '4', 'iiface': '', 'oiface': 'public0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Allow all From Mgmt Interface
-        {'order': 3152, 'version': '4', 'iiface': '', 'oiface': 'mgmt0', 'protocol': 'any', 'action': 'accept','log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
+        {'order': 3153, 'version': '4', 'iiface': '', 'oiface': 'mgmt0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Allow all From Public Interface
-        {'order': 3153, 'version': '4', 'iiface': '', 'oiface': 'oob0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
+        {'order': 3154, 'version': '4', 'iiface': '', 'oiface': 'oob0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Allow all From Private Interface
-        {'order': 3154, 'version': '4', 'iiface': '', 'oiface': 'private0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
+        {'order': 3155, 'version': '4', 'iiface': '', 'oiface': 'private0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Allow all From Inter Interface
-        {'order': 3155, 'version': '4', 'iiface': '', 'oiface': 'inter0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
+        {'order': 3156, 'version': '4', 'iiface': '', 'oiface': 'inter0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
 
         # 3.1.6 Outbound IPv6
+        # Allow all From lo Interface
+        {'order': 3161, 'version': '6', 'iiface': '', 'oiface': 'lo', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Allow all From Public Interface
-        {'order': 3161, 'version': '6', 'iiface': '', 'oiface': 'public0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
+        {'order': 3162, 'version': '6', 'iiface': '', 'oiface': 'public0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Allow all From Mgmt Interface
-        {'order': 3162, 'version': '6', 'iiface': '', 'oiface': 'mgmt0', 'protocol': 'any', 'action': 'accept','log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
+        {'order': 3163, 'version': '6', 'iiface': '', 'oiface': 'mgmt0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Allow all From Public Interface
-        {'order': 3163, 'version': '6', 'iiface': '', 'oiface': 'oob0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
+        {'order': 3164, 'version': '6', 'iiface': '', 'oiface': 'oob0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Allow all From Private Interface
-        {'order': 3164, 'version': '6', 'iiface': '', 'oiface': 'private0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
+        {'order': 3165, 'version': '6', 'iiface': '', 'oiface': 'private0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Allow all From Inter Interface
-        {'order': 3165, 'version': '6', 'iiface': '', 'oiface': 'inter0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
+        {'order': 3166, 'version': '6', 'iiface': '', 'oiface': 'inter0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
 
     ]
     win.addstr(2, 1, '3.1 Preparing Firewall Rules:            SUCCESS', curses.color_pair(4))
