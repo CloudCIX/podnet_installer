@@ -375,28 +375,32 @@ def build(win):
         # Outbound Block From Private to Public: Since default rules are blocked, no need this
 
         # 3.1.5 Outbound IPv4
+        # Allow all From lo Interface
+        {'order': 3151, 'version': '4', 'iiface': '', 'oiface': 'lo', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Allow all From Public Interface
-        {'order': 3151, 'version': '4', 'iiface': '', 'oiface': 'public0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
+        {'order': 3152, 'version': '4', 'iiface': '', 'oiface': 'public0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Allow all From Mgmt Interface
-        {'order': 3152, 'version': '4', 'iiface': '', 'oiface': 'mgmt0', 'protocol': 'any', 'action': 'accept','log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
+        {'order': 3153, 'version': '4', 'iiface': '', 'oiface': 'mgmt0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Allow all From Public Interface
-        {'order': 3153, 'version': '4', 'iiface': '', 'oiface': 'oob0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
+        {'order': 3154, 'version': '4', 'iiface': '', 'oiface': 'oob0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Allow all From Private Interface
-        {'order': 3154, 'version': '4', 'iiface': '', 'oiface': 'private0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
+        {'order': 3155, 'version': '4', 'iiface': '', 'oiface': 'private0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Allow all From Inter Interface
-        {'order': 3155, 'version': '4', 'iiface': '', 'oiface': 'inter0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
+        {'order': 3156, 'version': '4', 'iiface': '', 'oiface': 'inter0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
 
         # 3.1.6 Outbound IPv6
+        # Allow all From lo Interface
+        {'order': 3161, 'version': '6', 'iiface': '', 'oiface': 'lo', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Allow all From Public Interface
-        {'order': 3161, 'version': '6', 'iiface': '', 'oiface': 'public0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
+        {'order': 3162, 'version': '6', 'iiface': '', 'oiface': 'public0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Allow all From Mgmt Interface
-        {'order': 3162, 'version': '6', 'iiface': '', 'oiface': 'mgmt0', 'protocol': 'any', 'action': 'accept','log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
+        {'order': 3163, 'version': '6', 'iiface': '', 'oiface': 'mgmt0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Allow all From Public Interface
-        {'order': 3163, 'version': '6', 'iiface': '', 'oiface': 'oob0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
+        {'order': 3164, 'version': '6', 'iiface': '', 'oiface': 'oob0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Allow all From Private Interface
-        {'order': 3164, 'version': '6', 'iiface': '', 'oiface': 'private0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
+        {'order': 3165, 'version': '6', 'iiface': '', 'oiface': 'private0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
         # Allow all From Inter Interface
-        {'order': 3165, 'version': '6', 'iiface': '', 'oiface': 'inter0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
+        {'order': 3166, 'version': '6', 'iiface': '', 'oiface': 'inter0', 'protocol': 'any', 'action': 'accept', 'log': True, 'source': ['any'], 'destination': ['any'], 'port': []},
 
     ]
     win.addstr(2, 1, '3.1 Preparing Firewall Rules:            SUCCESS', curses.color_pair(4))
